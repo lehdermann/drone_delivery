@@ -1,0 +1,101 @@
+========================================================================
+Starting new experiment suite at Fri Sep 26 21:31:12 -03 2025
+========================================================================
+Starting experiment suite...
+
+--- Running Value Iteration (VI) Experiments ---
+[VI Run 0/9] wind_slip=.07, max_battery=9, seed=0
+[replay] VI converged in 23 sweeps; last delta=0.0
+[replay] Done. steps=9, return=-19.00, delivered=False
+[replay] Results appended to vi_experiments.csv
+[VI Run 1/9] wind_slip=.01, max_battery=13, seed=1
+[replay] VI converged in 70 sweeps; last delta=9.910467784912669e-05
+[replay] Done. steps=12, return=38.00, delivered=True
+[replay] Results appended to vi_experiments.csv
+[VI Run 2/9] wind_slip=0, max_battery=7, seed=2
+[replay] VI converged in 19 sweeps; last delta=0.0
+[replay] Done. steps=7, return=-17.00, delivered=False
+[replay] Results appended to vi_experiments.csv
+[VI Run 3/9] wind_slip=.12, max_battery=8, seed=3
+[replay] VI converged in 24 sweeps; last delta=0.0
+[replay] Done. steps=8, return=-18.00, delivered=False
+[replay] Results appended to vi_experiments.csv
+[VI Run 4/9] wind_slip=.09, max_battery=14, seed=4
+[replay] VI converged in 76 sweeps; last delta=8.596429600693511e-05
+[replay] Done. steps=18, return=-68.00, delivered=False
+[replay] Results appended to vi_experiments.csv
+[VI Run 5/9] wind_slip=0, max_battery=10, seed=5
+[replay] VI converged in 22 sweeps; last delta=0.0
+[replay] Done. steps=10, return=-20.00, delivered=False
+[replay] Results appended to vi_experiments.csv
+[VI Run 6/9] wind_slip=.32, max_battery=10, seed=6
+[replay] VI converged in 43 sweeps; last delta=0.0
+[replay] Done. steps=10, return=-20.00, delivered=False
+[replay] Results appended to vi_experiments.csv
+[VI Run 7/9] wind_slip=0, max_battery=8, seed=7
+[replay] VI converged in 20 sweeps; last delta=0.0
+[replay] Done. steps=8, return=-18.00, delivered=False
+[replay] Results appended to vi_experiments.csv
+[VI Run 8/9] wind_slip=.31, max_battery=14, seed=8
+[replay] VI converged in 47 sweeps; last delta=0.0
+[replay] Done. steps=14, return=-24.00, delivered=False
+[replay] Results appended to vi_experiments.csv
+[VI Run 9/9] wind_slip=.16, max_battery=9, seed=9
+[replay] VI converged in 27 sweeps; last delta=0.0
+[replay] Done. steps=9, return=-59.00, delivered=False
+[replay] Results appended to vi_experiments.csv
+
+--- Running Monte Carlo (MC) Experiments ---
+[MC Run 0/9] wind_slip=.16, epsilon=.11, seed=0
+[replay] Starting MC training for 10 episodes...
+[replay] MC training complete. Stats over last 100 episodes: Avg=-117.90, Var=1453.09, Std=38.12
+[replay] Done. steps=200, return=-200.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Run 1/9] wind_slip=.12, epsilon=.12, seed=1
+[replay] Starting MC training for 10 episodes...
+[replay] MC training complete. Stats over last 100 episodes: Avg=-108.00, Var=1472.00, Std=38.37
+[replay] Done. steps=15, return=-125.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Run 2/9] wind_slip=.28, epsilon=.05, seed=2
+[replay] Starting MC training for 10 episodes...
+[replay] MC training complete. Stats over last 100 episodes: Avg=-122.30, Var=2159.41, Std=46.47
+[replay] Done. steps=200, return=-200.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Run 3/9] wind_slip=.36, epsilon=.21, seed=3
+[replay] Starting MC training for 10 episodes...
+[replay] MC training complete. Stats over last 100 episodes: Avg=-85.60, Var=496.64, Std=22.29
+[replay] Done. steps=200, return=-200.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Run 4/9] wind_slip=.23, epsilon=.18, seed=4
+[replay] Starting MC training for 10 episodes...
+[replay] MC training complete. Stats over last 100 episodes: Avg=-105.00, Var=1693.20, Std=41.15
+[replay] Done. steps=200, return=-200.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Run 5/9] wind_slip=.30, epsilon=.06, seed=5
+[replay] Starting MC training for 10 episodes...
+[replay] MC training complete. Stats over last 100 episodes: Avg=-117.20, Var=1093.36, Std=33.07
+[replay] Done. steps=200, return=-240.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Run 6/9] wind_slip=.16, epsilon=.12, seed=6
+[replay] Starting MC training for 10 episodes...
+[replay] MC training complete. Stats over last 100 episodes: Avg=-120.00, Var=2979.00, Std=54.58
+[replay] Done. steps=200, return=-200.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Run 7/9] wind_slip=.28, epsilon=.11, seed=7
+[replay] Starting MC training for 10 episodes...
+[replay] MC training complete. Stats over last 100 episodes: Avg=-82.90, Var=1495.89, Std=38.68
+[replay] Done. steps=200, return=-220.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Run 8/9] wind_slip=.03, epsilon=.22, seed=8
+[replay] Starting MC training for 10 episodes...
+[replay] MC training complete. Stats over last 100 episodes: Avg=-127.40, Var=3625.24, Std=60.21
+[replay] Done. steps=200, return=-200.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Run 9/9] wind_slip=.03, epsilon=.24, seed=9
+[replay] Starting MC training for 10 episodes...
+[replay] MC training complete. Stats over last 100 episodes: Avg=-113.10, Var=4097.69, Std=64.01
+[replay] Done. steps=12, return=-62.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+
+Experiment suite finished. Results are in vi_experiments.csv and mc_experiments.csv.
+Full console output logged to run_experiments.out.

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""Replay a greedy policy computed by Value Iteration with live rendering.
+"""Replay a greedy policy computed by On-Policy MC Control with live rendering.
 
 This script:
 - Builds the DroneDeliveryEnv with render_mode="human" (matplotlib window).
-- Runs Value Iteration to compute V and the greedy policy.
+- Runs On-Policy MC Control to compute Q and the greedy policy.
 - Replays one episode taking greedy actions a = pi[s], rendering at every step.
 
 Usage:
-  python -m examples.replay_vi_policy --width 7 --height 7 --max-battery 12 --charge-rate 2 \
-    --wind-slip 0.05 --gamma 0.99 --theta 1e-4 --seed 0 --sleep 0.2
+  python -m examples.replay_mc_policy --width 7 --height 7 --max-battery 12 \
+    --wind-slip 0.05 --gamma 0.99 --epsilon 0.1 --episodes 10000 --seed 0 --sleep 0.2
 
 Notes:
 - Requires matplotlib (already in requirements.txt).
@@ -23,21 +23,22 @@ import os
 import numpy as np
 
 from envs.drone_delivery import DroneDeliveryEnv
-from algorithms.dp import value_iteration
+from algorithms.mc import mc_control_epsilon_soft
 
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Replay VI greedy policy with rendering")
+    p = argparse.ArgumentParser(description="Replay MC greedy policy with rendering")
     # Env
     p.add_argument("--width", type=int, default=7)
     p.add_argument("--height", type=int, default=7)
-    p.add_argument("--max-battery", dest="max_battery", type=int, default=5)
+    p.add_argument("--max-battery", dest="max_battery", type=int, default=12)
     p.add_argument("--charge-rate", dest="charge_rate", type=int, default=2)
-    p.add_argument("--wind-slip", dest="wind_slip", type=float, default=0.1)
+    p.add_argument("--wind-slip", dest="wind_slip", type=float, default=0.05)
     p.add_argument("--seed", type=int, default=0)
-    # VI
+    # MC
     p.add_argument("--gamma", type=float, default=0.99)
-    p.add_argument("--theta", type=float, default=1e-4)
+    p.add_argument("--episodes", type=int, default=20_000)
+    p.add_argument("--epsilon", type=float, default=0.1)
     # Replay
     p.add_argument("--sleep", type=float, default=0.1, help="Seconds to sleep between steps for visualization")
     return p.parse_args()
@@ -57,13 +58,24 @@ def main() -> None:
         seed=args.seed,
     )
 
-    # Compute VI policy
-    V, policy, stats = value_iteration(env, gamma=args.gamma, theta=args.theta)
-    vi_iterations = stats.get('iterations', 0)
-    vi_last_delta = stats.get('deltas', [0])[-1] if stats.get('deltas') else 0
-    print(f"[replay] VI converged in {vi_iterations} sweeps; last delta={vi_last_delta}")
+    # Compute MC policy
+    print(f"[replay] Starting MC training for {args.episodes} episodes...")
+    policy, Q, returns_avg = mc_control_epsilon_soft(
+        env, episodes=args.episodes, gamma=args.gamma, epsilon=args.epsilon, seed=args.seed
+    )
+    
+    # Calculate statistics over the last 100 episodes
+    last_100_returns = returns_avg[-100:]
+    avg_return = np.mean(last_100_returns)
+    var_return = np.var(last_100_returns) if len(last_100_returns) > 0 else 0.0
+    std_return = np.std(last_100_returns) if len(last_100_returns) > 0 else 0.0
+    print(f"[replay] MC training complete. Stats over last 100 episodes: Avg={avg_return:.2f}, Var={var_return:.2f}, Std={std_return:.2f}")
 
     # Replay one episode greedily
+    # Note: we reset with a different seed for replay to get a representative sample
+    # of the policy's performance, rather than replaying a path seen in training.
+    replay_seed = args.seed + 1 if args.seed is not None else None
+    s, _ = env.reset(seed=replay_seed)
     s, _ = env.reset(seed=args.seed)
     done = False
     truncated = False
@@ -80,14 +92,15 @@ def main() -> None:
     print(f"[replay] Done. steps={steps}, return={total_return:.2f}, delivered={delivered}")
 
     # Save results to CSV
-    results_filepath = "vi_experiments.csv"
+    results_filepath = "mc_experiments.csv"
     run_params = vars(args)
     # We don't need to log the visualization sleep time
     run_params.pop("sleep", None)
 
     results_data = {
-        "vi_iterations": vi_iterations,
-        "vi_last_delta": vi_last_delta,
+        "avg_return_last_100": avg_return,
+        "var_return_last_100": var_return,
+        "std_return_last_100": std_return,
         "replay_steps": steps,
         "replay_return": total_return,
         "replay_delivered": delivered,
