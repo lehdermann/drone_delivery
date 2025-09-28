@@ -1,100 +1,232 @@
 ========================================================================
-Starting new experiment suite at Fri Sep 26 21:31:12 -03 2025
+Starting new experiment suite at Sun Sep 28 15:04:11 -03 2025
 ========================================================================
 Starting experiment suite...
 
 --- Running Value Iteration (VI) Experiments ---
-[VI Run 0/9] wind_slip=.07, max_battery=9, seed=0
-[replay] VI converged in 23 sweeps; last delta=0.0
-[replay] Done. steps=9, return=-19.00, delivered=False
-[replay] Results appended to vi_experiments.csv
-[VI Run 1/9] wind_slip=.01, max_battery=13, seed=1
-[replay] VI converged in 70 sweeps; last delta=9.910467784912669e-05
-[replay] Done. steps=12, return=38.00, delivered=True
-[replay] Results appended to vi_experiments.csv
-[VI Run 2/9] wind_slip=0, max_battery=7, seed=2
-[replay] VI converged in 19 sweeps; last delta=0.0
+[VI Run 0/9] wind_slip=.10, max_battery=7, seed=0
+[replay] VI converged in 22 sweeps; last delta=0.0
 [replay] Done. steps=7, return=-17.00, delivered=False
 [replay] Results appended to vi_experiments.csv
-[VI Run 3/9] wind_slip=.12, max_battery=8, seed=3
-[replay] VI converged in 24 sweeps; last delta=0.0
-[replay] Done. steps=8, return=-18.00, delivered=False
+[VI Run 1/9] wind_slip=.24, max_battery=9, seed=1
+[replay] VI converged in 32 sweeps; last delta=0.0
+[replay] Done. steps=9, return=-19.00, delivered=False
 [replay] Results appended to vi_experiments.csv
-[VI Run 4/9] wind_slip=.09, max_battery=14, seed=4
-[replay] VI converged in 76 sweeps; last delta=8.596429600693511e-05
-[replay] Done. steps=18, return=-68.00, delivered=False
-[replay] Results appended to vi_experiments.csv
-[VI Run 5/9] wind_slip=0, max_battery=10, seed=5
-[replay] VI converged in 22 sweeps; last delta=0.0
-[replay] Done. steps=10, return=-20.00, delivered=False
-[replay] Results appended to vi_experiments.csv
-[VI Run 6/9] wind_slip=.32, max_battery=10, seed=6
-[replay] VI converged in 43 sweeps; last delta=0.0
-[replay] Done. steps=10, return=-20.00, delivered=False
-[replay] Results appended to vi_experiments.csv
-[VI Run 7/9] wind_slip=0, max_battery=8, seed=7
+[VI Run 2/9] wind_slip=.06, max_battery=6, seed=2
 [replay] VI converged in 20 sweeps; last delta=0.0
-[replay] Done. steps=8, return=-18.00, delivered=False
+[replay] Done. steps=6, return=-16.00, delivered=False
 [replay] Results appended to vi_experiments.csv
-[VI Run 8/9] wind_slip=.31, max_battery=14, seed=8
-[replay] VI converged in 47 sweeps; last delta=0.0
-[replay] Done. steps=14, return=-24.00, delivered=False
+[VI Run 3/9] wind_slip=.30, max_battery=5, seed=3
+[replay] VI converged in 31 sweeps; last delta=0.0
+[replay] Done. steps=5, return=-15.00, delivered=False
 [replay] Results appended to vi_experiments.csv
-[VI Run 9/9] wind_slip=.16, max_battery=9, seed=9
-[replay] VI converged in 27 sweeps; last delta=0.0
-[replay] Done. steps=9, return=-59.00, delivered=False
+[VI Run 4/9] wind_slip=.05, max_battery=12, seed=4
+[replay] VI converged in 82 sweeps; last delta=8.42339033901851e-05
+[replay] Done. steps=12, return=38.00, delivered=True
+[replay] Results appended to vi_experiments.csv
+[VI Run 5/9] wind_slip=.19, max_battery=9, seed=5
+[replay] VI converged in 29 sweeps; last delta=0.0
+[replay] Done. steps=9, return=-19.00, delivered=False
+[replay] Results appended to vi_experiments.csv
+[VI Run 6/9] wind_slip=.13, max_battery=13, seed=6
+[replay] VI converged in 52 sweeps; last delta=9.770202560233088e-05
+[replay] Done. steps=13, return=-23.00, delivered=False
+[replay] Results appended to vi_experiments.csv
+[VI Run 7/9] wind_slip=.17, max_battery=10, seed=7
+[replay] VI converged in 29 sweeps; last delta=0.0
+[replay] Done. steps=10, return=-20.00, delivered=False
+[replay] Results appended to vi_experiments.csv
+[VI Run 8/9] wind_slip=.36, max_battery=6, seed=8
+[replay] VI converged in 39 sweeps; last delta=0.0
+[replay] Done. steps=6, return=-36.00, delivered=False
+[replay] Results appended to vi_experiments.csv
+[VI Run 9/9] wind_slip=.22, max_battery=11, seed=9
+[replay] VI converged in 33 sweeps; last delta=0.0
+[replay] Done. steps=11, return=-41.00, delivered=False
 [replay] Results appended to vi_experiments.csv
 
---- Running Monte Carlo (MC) Experiments ---
-[MC Run 0/9] wind_slip=.16, epsilon=.11, seed=0
-[replay] Starting MC training for 10 episodes...
-[replay] MC training complete. Stats over last 100 episodes: Avg=-117.90, Var=1453.09, Std=38.12
+--- Running Monte Carlo (MC) Experiments: On-Policy ---
+[MC On-Policy] wind_slip=0.00, epsilon=0.10, episodes=10, seed=0
+[replay] Starting MC training for 10 episodes... (off_policy=False)
+[replay] MC training complete. Stats over last 100 episodes: Avg=-141.70, Var=8994.41, Std=94.84
+[replay][eval] N=100 success_rate=0.000 avg_return=-62.00 avg_steps=12.0 avg_collisions=2.00
+[replay] Done. steps=12, return=-62.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC On-Policy] wind_slip=0.00, epsilon=0.10, episodes=10, seed=1
+[replay] Starting MC training for 10 episodes... (off_policy=False)
+[replay] MC training complete. Stats over last 100 episodes: Avg=-108.20, Var=9816.96, Std=99.08
+[replay][eval] N=100 success_rate=0.000 avg_return=-200.00 avg_steps=200.0 avg_collisions=0.00
 [replay] Done. steps=200, return=-200.00, delivered=False
 [replay] Results appended to mc_experiments.csv
-[MC Run 1/9] wind_slip=.12, epsilon=.12, seed=1
-[replay] Starting MC training for 10 episodes...
-[replay] MC training complete. Stats over last 100 episodes: Avg=-108.00, Var=1472.00, Std=38.37
-[replay] Done. steps=15, return=-125.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC Run 2/9] wind_slip=.28, epsilon=.05, seed=2
-[replay] Starting MC training for 10 episodes...
-[replay] MC training complete. Stats over last 100 episodes: Avg=-122.30, Var=2159.41, Std=46.47
-[replay] Done. steps=200, return=-200.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC Run 3/9] wind_slip=.36, epsilon=.21, seed=3
-[replay] Starting MC training for 10 episodes...
-[replay] MC training complete. Stats over last 100 episodes: Avg=-85.60, Var=496.64, Std=22.29
-[replay] Done. steps=200, return=-200.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC Run 4/9] wind_slip=.23, epsilon=.18, seed=4
-[replay] Starting MC training for 10 episodes...
-[replay] MC training complete. Stats over last 100 episodes: Avg=-105.00, Var=1693.20, Std=41.15
-[replay] Done. steps=200, return=-200.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC Run 5/9] wind_slip=.30, epsilon=.06, seed=5
-[replay] Starting MC training for 10 episodes...
-[replay] MC training complete. Stats over last 100 episodes: Avg=-117.20, Var=1093.36, Std=33.07
-[replay] Done. steps=200, return=-240.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC Run 6/9] wind_slip=.16, epsilon=.12, seed=6
-[replay] Starting MC training for 10 episodes...
-[replay] MC training complete. Stats over last 100 episodes: Avg=-120.00, Var=2979.00, Std=54.58
-[replay] Done. steps=200, return=-200.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC Run 7/9] wind_slip=.28, epsilon=.11, seed=7
-[replay] Starting MC training for 10 episodes...
-[replay] MC training complete. Stats over last 100 episodes: Avg=-82.90, Var=1495.89, Std=38.68
+[MC On-Policy] wind_slip=0.00, epsilon=0.10, episodes=10, seed=2
+[replay] Starting MC training for 10 episodes... (off_policy=False)
+[replay] MC training complete. Stats over last 100 episodes: Avg=-107.00, Var=4546.60, Std=67.43
+[replay][eval] N=100 success_rate=0.000 avg_return=-220.00 avg_steps=200.0 avg_collisions=1.00
 [replay] Done. steps=200, return=-220.00, delivered=False
 [replay] Results appended to mc_experiments.csv
-[MC Run 8/9] wind_slip=.03, epsilon=.22, seed=8
-[replay] Starting MC training for 10 episodes...
-[replay] MC training complete. Stats over last 100 episodes: Avg=-127.40, Var=3625.24, Std=60.21
+[MC On-Policy] wind_slip=0.05, epsilon=0.10, episodes=10, seed=0
+[replay] Starting MC training for 10 episodes... (off_policy=False)
+[replay] MC training complete. Stats over last 100 episodes: Avg=-117.60, Var=7009.64, Std=83.72
+[replay][eval] N=100 success_rate=0.000 avg_return=-49.02 avg_steps=28.9 avg_collisions=0.55
+[replay] Done. steps=12, return=-62.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC On-Policy] wind_slip=0.05, epsilon=0.10, episodes=10, seed=1
+[replay] Starting MC training for 10 episodes... (off_policy=False)
+[replay] MC training complete. Stats over last 100 episodes: Avg=-128.00, Var=4597.20, Std=67.80
+[replay][eval] N=100 success_rate=0.000 avg_return=-200.00 avg_steps=200.0 avg_collisions=0.00
 [replay] Done. steps=200, return=-200.00, delivered=False
 [replay] Results appended to mc_experiments.csv
-[MC Run 9/9] wind_slip=.03, epsilon=.24, seed=9
-[replay] Starting MC training for 10 episodes...
-[replay] MC training complete. Stats over last 100 episodes: Avg=-113.10, Var=4097.69, Std=64.01
-[replay] Done. steps=12, return=-62.00, delivered=False
+[MC On-Policy] wind_slip=0.05, epsilon=0.10, episodes=10, seed=2
+[replay] Starting MC training for 10 episodes... (off_policy=False)
+[replay] MC training complete. Stats over last 100 episodes: Avg=-116.80, Var=3667.16, Std=60.56
+[replay][eval] N=100 success_rate=0.000 avg_return=-185.26 avg_steps=175.6 avg_collisions=0.42
+[replay] Done. steps=200, return=-200.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC On-Policy] wind_slip=0.10, epsilon=0.10, episodes=10, seed=0
+[replay] Starting MC training for 10 episodes... (off_policy=False)
+[replay] MC training complete. Stats over last 100 episodes: Avg=-103.20, Var=2483.56, Std=49.84
+[replay][eval] N=100 success_rate=0.000 avg_return=-78.14 avg_steps=36.4 avg_collisions=1.65
+[replay] Done. steps=200, return=-200.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC On-Policy] wind_slip=0.10, epsilon=0.10, episodes=10, seed=1
+[replay] Starting MC training for 10 episodes... (off_policy=False)
+[replay] MC training complete. Stats over last 100 episodes: Avg=-113.20, Var=2434.96, Std=49.35
+[replay][eval] N=100 success_rate=0.000 avg_return=-200.00 avg_steps=200.0 avg_collisions=0.00
+[replay] Done. steps=200, return=-200.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC On-Policy] wind_slip=0.10, epsilon=0.10, episodes=10, seed=2
+[replay] Starting MC training for 10 episodes... (off_policy=False)
+[replay] MC training complete. Stats over last 100 episodes: Avg=-129.00, Var=3095.60, Std=55.64
+[replay][eval] N=100 success_rate=0.000 avg_return=-200.00 avg_steps=200.0 avg_collisions=0.00
+[replay] Done. steps=200, return=-200.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+
+--- Running Monte Carlo (MC) Experiments: Off-Policy (Weighted IS, epsilon behavior) ---
+[MC Off-Policy] wind_slip=0.00, behavior=epsilon, behavior_epsilon=0.10, episodes=10, seed=0
+[replay] Starting MC training for 10 episodes... (off_policy=True)
+[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.9045, samples=199; expected_greedy_fraction≈0.9167 for epsilon=0.100, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-257.90, Var=1282.69, Std=35.81
+[replay][eval] N=100 success_rate=0.000 avg_return=-420.00 avg_steps=200.0 avg_collisions=11.00
+[replay] Done. steps=200, return=-420.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Off-Policy] wind_slip=0.00, behavior=epsilon, behavior_epsilon=0.20, episodes=10, seed=0
+[replay] Starting MC training for 10 episodes... (off_policy=True)
+[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8875, samples=160; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-264.00, Var=674.60, Std=25.97
+[replay][eval] N=100 success_rate=0.000 avg_return=-420.00 avg_steps=200.0 avg_collisions=11.00
+[replay] Done. steps=200, return=-420.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Off-Policy] wind_slip=0.00, behavior=epsilon, behavior_epsilon=0.10, episodes=10, seed=1
+[replay] Starting MC training for 10 episodes... (off_policy=True)
+[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.9363, samples=204; expected_greedy_fraction≈0.9167 for epsilon=0.100, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-264.40, Var=909.24, Std=30.15
+[replay][eval] N=100 success_rate=0.000 avg_return=-420.00 avg_steps=200.0 avg_collisions=11.00
+[replay] Done. steps=200, return=-420.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Off-Policy] wind_slip=0.00, behavior=epsilon, behavior_epsilon=0.20, episodes=10, seed=1
+[replay] Starting MC training for 10 episodes... (off_policy=True)
+[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8151, samples=146; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-252.60, Var=1302.44, Std=36.09
+[replay][eval] N=100 success_rate=0.000 avg_return=-420.00 avg_steps=200.0 avg_collisions=11.00
+[replay] Done. steps=200, return=-420.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Off-Policy] wind_slip=0.00, behavior=epsilon, behavior_epsilon=0.10, episodes=10, seed=2
+[replay] Starting MC training for 10 episodes... (off_policy=True)
+[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.9081, samples=185; expected_greedy_fraction≈0.9167 for epsilon=0.100, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-264.50, Var=3848.65, Std=62.04
+[replay][eval] N=100 success_rate=0.000 avg_return=-420.00 avg_steps=200.0 avg_collisions=11.00
+[replay] Done. steps=200, return=-420.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Off-Policy] wind_slip=0.00, behavior=epsilon, behavior_epsilon=0.20, episodes=10, seed=2
+[replay] Starting MC training for 10 episodes... (off_policy=True)
+[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8045, samples=133; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-227.30, Var=831.61, Std=28.84
+[replay][eval] N=100 success_rate=0.000 avg_return=-420.00 avg_steps=200.0 avg_collisions=11.00
+[replay] Done. steps=200, return=-420.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Off-Policy] wind_slip=0.05, behavior=epsilon, behavior_epsilon=0.10, episodes=10, seed=0
+[replay] Starting MC training for 10 episodes... (off_policy=True)
+[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8954, samples=153; expected_greedy_fraction≈0.9167 for epsilon=0.100, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-241.30, Var=3173.41, Std=56.33
+[replay][eval] N=100 success_rate=0.000 avg_return=-348.86 avg_steps=138.0 avg_collisions=10.38
+[replay] Done. steps=200, return=-380.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Off-Policy] wind_slip=0.05, behavior=epsilon, behavior_epsilon=0.20, episodes=10, seed=0
+[replay] Starting MC training for 10 episodes... (off_policy=True)
+[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8806, samples=134; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-229.40, Var=1137.24, Std=33.72
+[replay][eval] N=100 success_rate=0.000 avg_return=-348.86 avg_steps=138.0 avg_collisions=10.38
+[replay] Done. steps=200, return=-380.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Off-Policy] wind_slip=0.05, behavior=epsilon, behavior_epsilon=0.10, episodes=10, seed=1
+[replay] Starting MC training for 10 episodes... (off_policy=True)
+[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.9360, samples=172; expected_greedy_fraction≈0.9167 for epsilon=0.100, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-243.20, Var=596.96, Std=24.43
+[replay][eval] N=100 success_rate=0.000 avg_return=-348.86 avg_steps=138.0 avg_collisions=10.38
+[replay] Done. steps=200, return=-420.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Off-Policy] wind_slip=0.05, behavior=epsilon, behavior_epsilon=0.20, episodes=10, seed=1
+[replay] Starting MC training for 10 episodes... (off_policy=True)
+[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8219, samples=146; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-226.60, Var=880.44, Std=29.67
+[replay][eval] N=100 success_rate=0.000 avg_return=-348.86 avg_steps=138.0 avg_collisions=10.38
+[replay] Done. steps=200, return=-420.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Off-Policy] wind_slip=0.05, behavior=epsilon, behavior_epsilon=0.10, episodes=10, seed=2
+[replay] Starting MC training for 10 episodes... (off_policy=True)
+[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8889, samples=126; expected_greedy_fraction≈0.9167 for epsilon=0.100, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-226.60, Var=464.24, Std=21.55
+[replay][eval] N=100 success_rate=0.000 avg_return=-229.80 avg_steps=12.0 avg_collisions=10.39
+[replay] Done. steps=12, return=-242.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Off-Policy] wind_slip=0.05, behavior=epsilon, behavior_epsilon=0.20, episodes=10, seed=2
+[replay] Starting MC training for 10 episodes... (off_policy=True)
+[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8015, samples=131; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-217.10, Var=1626.89, Std=40.33
+[replay][eval] N=100 success_rate=0.000 avg_return=-348.86 avg_steps=138.0 avg_collisions=10.38
+[replay] Done. steps=200, return=-420.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Off-Policy] wind_slip=0.10, behavior=epsilon, behavior_epsilon=0.10, episodes=10, seed=0
+[replay] Starting MC training for 10 episodes... (off_policy=True)
+[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.9143, samples=140; expected_greedy_fraction≈0.9167 for epsilon=0.100, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-214.00, Var=2979.40, Std=54.58
+[replay][eval] N=100 success_rate=0.000 avg_return=-301.80 avg_steps=106.0 avg_collisions=9.54
+[replay] Done. steps=12, return=-182.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Off-Policy] wind_slip=0.10, behavior=epsilon, behavior_epsilon=0.20, episodes=10, seed=0
+[replay] Starting MC training for 10 episodes... (off_policy=True)
+[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8855, samples=131; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-199.10, Var=1626.29, Std=40.33
+[replay][eval] N=100 success_rate=0.000 avg_return=-284.88 avg_steps=79.7 avg_collisions=9.94
+[replay] Done. steps=200, return=-360.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Off-Policy] wind_slip=0.10, behavior=epsilon, behavior_epsilon=0.10, episodes=10, seed=1
+[replay] Starting MC training for 10 episodes... (off_policy=True)
+[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.9360, samples=172; expected_greedy_fraction≈0.9167 for epsilon=0.100, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-243.20, Var=733.76, Std=27.09
+[replay][eval] N=100 success_rate=0.000 avg_return=-367.88 avg_steps=173.7 avg_collisions=9.64
+[replay] Done. steps=200, return=-420.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Off-Policy] wind_slip=0.10, behavior=epsilon, behavior_epsilon=0.20, episodes=10, seed=1
+[replay] Starting MC training for 10 episodes... (off_policy=True)
+[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8295, samples=129; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-216.90, Var=1235.89, Std=35.16
+[replay][eval] N=100 success_rate=0.000 avg_return=-216.00 avg_steps=12.0 avg_collisions=9.70
+[replay] Done. steps=12, return=-242.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Off-Policy] wind_slip=0.10, behavior=epsilon, behavior_epsilon=0.10, episodes=10, seed=2
+[replay] Starting MC training for 10 episodes... (off_policy=True)
+[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8906, samples=128; expected_greedy_fraction≈0.9167 for epsilon=0.100, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-212.80, Var=753.96, Std=27.46
+[replay][eval] N=100 success_rate=0.000 avg_return=-366.08 avg_steps=173.7 avg_collisions=9.55
+[replay] Done. steps=200, return=-420.00, delivered=False
+[replay] Results appended to mc_experiments.csv
+[MC Off-Policy] wind_slip=0.10, behavior=epsilon, behavior_epsilon=0.20, episodes=10, seed=2
+[replay] Starting MC training for 10 episodes... (off_policy=True)
+[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8120, samples=133; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-215.30, Var=1190.81, Std=34.51
+[replay][eval] N=100 success_rate=0.000 avg_return=-302.80 avg_steps=106.0 avg_collisions=9.59
+[replay] Done. steps=200, return=-420.00, delivered=False
 [replay] Results appended to mc_experiments.csv
 
 Experiment suite finished. Results are in vi_experiments.csv and mc_experiments.csv.

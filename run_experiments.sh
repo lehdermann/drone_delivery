@@ -47,7 +47,7 @@ echo "--- Running Monte Carlo (MC) Experiments: On-Policy ---"
 wind_slips=(0.00 0.05 0.10)
 seeds=(0 1 2)
 epsilons=(0.10)
-mc_episodes=5000
+mc_episodes=10
 
 for ws in "${wind_slips[@]}"; do
   for seed in "${seeds[@]}"; do
