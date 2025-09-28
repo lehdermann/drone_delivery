@@ -39,22 +39,51 @@ do
         --sleep 0 # Disable sleep for faster execution
 done
 
-# --- Monte Carlo Experiments (10 runs) ---
+# --- Monte Carlo Experiments: On-Policy and Off-Policy (grid, reproducible) ---
 echo ""
-echo "--- Running Monte Carlo (MC) Experiments ---"
-for i in {0..9}
-do
-    # Vary wind_slip between 0.0 and 0.4, and epsilon between 0.05 and 0.3
-    wind_slip=$(echo "scale=2; $RANDOM/32767 * 0.4" | bc)
-    epsilon=$(echo "scale=2; 0.05 + ($RANDOM/32767 * 0.25)" | bc)
+echo "--- Running Monte Carlo (MC) Experiments: On-Policy ---"
 
-    echo "[MC Run ${i}/9] wind_slip=${wind_slip}, epsilon=${epsilon}, seed=${i}"
-    python -m examples.replay_mc_policy \
-        --wind-slip "$wind_slip" \
-        --epsilon "$epsilon" \
-        --episodes 10 `# Keep episodes fixed for fair comparison` \
-        --seed "$i" \
-        --sleep 0 # Disable sleep for faster execution
+# Grids (reproducible): adjust as needed
+wind_slips=(0.00 0.05 0.10)
+seeds=(0 1 2)
+epsilons=(0.10)
+mc_episodes=5000
+
+for ws in "${wind_slips[@]}"; do
+  for seed in "${seeds[@]}"; do
+    for eps in "${epsilons[@]}"; do
+      echo "[MC On-Policy] wind_slip=${ws}, epsilon=${eps}, episodes=${mc_episodes}, seed=${seed}"
+      python -m examples.replay_mc_policy \
+        --wind-slip "$ws" \
+        --epsilon "$eps" \
+        --episodes "$mc_episodes" \
+        --seed "$seed" \
+        --sleep 0 \
+        --eval-episodes 100
+    done
+  done
+done
+
+echo ""
+echo "--- Running Monte Carlo (MC) Experiments: Off-Policy (Weighted IS, epsilon behavior) ---"
+
+behavior_epsilons=(0.10 0.20)
+debug_behavior_episodes=200
+
+for ws in "${wind_slips[@]}"; do
+  for seed in "${seeds[@]}"; do
+    for beps in "${behavior_epsilons[@]}"; do
+      echo "[MC Off-Policy] wind_slip=${ws}, behavior=epsilon, behavior_epsilon=${beps}, episodes=${mc_episodes}, seed=${seed}"
+      python -m examples.replay_mc_policy \
+        --wind-slip "$ws" \
+        --episodes "$mc_episodes" \
+        --seed "$seed" \
+        --sleep 0 \
+        --off-policy --behavior epsilon --behavior-epsilon "$beps" --off-weighted \
+        --eval-episodes 100 \
+        --debug-behavior --debug-behavior-episodes "$debug_behavior_episodes"
+    done
+  done
 done
 
 echo ""

@@ -42,6 +42,7 @@ Default settings keep the state space small and suitable for tabular methods.
   - Policy Iteration (iterative policy evaluation + greedy improvement)
 - Monte Carlo (model-free):
   - On-policy MC Control, epsilon-soft, first-visit
+  - Off-policy Monte Carlo Control using Importance Sampling
 
 ## Project Structure
 - `envs/drone_delivery.py` — Gymnasium environment with `enumerate_transitions(s, a)` for DP.

@@ -38,6 +38,8 @@ def parse_args() -> argparse.Namespace:
     # VI
     p.add_argument("--gamma", type=float, default=0.99)
     p.add_argument("--theta", type=float, default=1e-4)
+    # Evaluation (post-policy, no rendering)
+    p.add_argument("--eval-episodes", type=int, default=0, help="Greedy evaluation episodes after VI (no rendering)")
     # Replay
     p.add_argument("--sleep", type=float, default=0.1, help="Seconds to sleep between steps for visualization")
     return p.parse_args()
@@ -62,6 +64,61 @@ def main() -> None:
     vi_iterations = stats.get('iterations', 0)
     vi_last_delta = stats.get('deltas', [0])[-1] if stats.get('deltas') else 0
     print(f"[replay] VI converged in {vi_iterations} sweeps; last delta={vi_last_delta}")
+
+    # Optional greedy evaluation without rendering
+    eval_metrics = {}
+    if int(args.eval_episodes) > 0:
+        eval_env = DroneDeliveryEnv(
+            width=args.width,
+            height=args.height,
+            max_battery=args.max_battery,
+            charge_rate=args.charge_rate,
+            wind_slip=args.wind_slip,
+            render_mode=None,
+            seed=args.seed,
+        )
+        ep_returns = []
+        ep_steps = []
+        ep_collisions = []
+        ep_success = []
+        for i in range(int(args.eval_episodes)):
+            s, _ = eval_env.reset(seed=(args.seed + 2000 + i) if args.seed is not None else None)
+            done = False
+            truncated = False
+            total_r = 0.0
+            steps = 0
+            collisions = 0
+            delivered = False
+            while not (done or truncated):
+                a = int(policy[s])
+                s, r, done, truncated, info = eval_env.step(a)
+                total_r += float(r)
+                steps += 1
+                if bool(info.get("collision", False)):
+                    collisions += 1
+                if bool(info.get("delivered", False)):
+                    delivered = True
+            ep_returns.append(total_r)
+            ep_steps.append(steps)
+            ep_collisions.append(collisions)
+            ep_success.append(1 if delivered else 0)
+        eval_metrics = {
+            "eval_episodes": int(args.eval_episodes),
+            "eval_success_rate": float(np.mean(ep_success)) if ep_success else 0.0,
+            "eval_avg_return": float(np.mean(ep_returns)) if ep_returns else 0.0,
+            "eval_avg_steps": float(np.mean(ep_steps)) if ep_steps else 0.0,
+            "eval_avg_collisions": float(np.mean(ep_collisions)) if ep_collisions else 0.0,
+        }
+        print(
+            "[replay][eval] N={} success_rate={:.3f} avg_return={:.2f} avg_steps={:.1f} avg_collisions={:.2f}".format(
+                eval_metrics["eval_episodes"],
+                eval_metrics["eval_success_rate"],
+                eval_metrics["eval_avg_return"],
+                eval_metrics["eval_avg_steps"],
+                eval_metrics["eval_avg_collisions"],
+            )
+        )
+        eval_env.close()
 
     # Replay one episode greedily
     s, _ = env.reset(seed=args.seed)
@@ -94,7 +151,7 @@ def main() -> None:
     }
 
     # Combine params and results into a single dictionary for the CSV row
-    log_data = {**run_params, **results_data}
+    log_data = {**run_params, **results_data, **eval_metrics}
 
     file_exists = os.path.isfile(results_filepath)
     with open(results_filepath, mode='a', newline='') as csvfile:
