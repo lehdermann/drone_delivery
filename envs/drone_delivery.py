@@ -263,28 +263,154 @@ class DroneDeliveryEnv(gym.Env):
             print(s)
             return s
         else:
-            # human with matplotlib
+            # human with matplotlib - enhanced visual representation
             if self._fig is None or self._ax is None:
-                self._fig, self._ax = plt.subplots(figsize=(5, 5))
+                self._fig, self._ax = plt.subplots(figsize=(8, 8))
                 self._ax.set_xlim(-0.5, self.width - 0.5)
                 self._ax.set_ylim(-0.5, self.height - 0.5)
                 self._ax.set_aspect('equal')
                 self._ax.invert_yaxis()
             self._ax.clear()
-            # grid
+            
+            # Draw grid cells with enhanced colors
             for x in range(self.width):
                 for y in range(self.height):
-                    color = "white"
+                    color = "#F5F5F5"  # Light gray for free space
+                    edgecolor = "#CCCCCC"
+                    linewidth = 0.5
+                    
                     if Cell(x, y) in self.obstacles:
-                        color = "black"
+                        color = "#2C3E50"  # Dark gray for obstacles
+                        edgecolor = "#1A252F"
+                        linewidth = 1.5
                     elif x == self.pickup.x and y == self.pickup.y:
-                        color = "lightblue"
+                        color = "#AED6F1"  # Light blue for store/pickup
+                        edgecolor = "#5DADE2"
+                        linewidth = 2
                     elif x == self.dropoff.x and y == self.dropoff.y:
-                        color = "lightgreen"
-                    self._ax.add_patch(plt.Rectangle((x - 0.5, y - 0.5), 1, 1, facecolor=color, edgecolor='gray'))
-            # agent
-            self._ax.plot(self._x, self._y, marker='o', color='red')
-            self._ax.set_title(f"Battery={self._battery} Steps={self._steps}")
+                        color = "#ABEBC6"  # Light green for house/dropoff
+                        edgecolor = "#58D68D"
+                        linewidth = 2
+                    elif Cell(x, y) in self.charging_stations:
+                        color = "#FAD7A0"  # Light orange for charging stations
+                        edgecolor = "#F8C471"
+                        linewidth = 1.5
+                    
+                    self._ax.add_patch(plt.Rectangle(
+                        (x - 0.5, y - 0.5), 1, 1, 
+                        facecolor=color, 
+                        edgecolor=edgecolor,
+                        linewidth=linewidth
+                    ))
+            
+            # Draw icons/markers for special locations
+            # Store/Pickup location - use 'S' marker with store icon
+            self._ax.plot(self.pickup.x, self.pickup.y, marker='s', markersize=20, 
+                         color='#3498DB', markeredgecolor='#2874A6', markeredgewidth=2, zorder=5)
+            self._ax.text(self.pickup.x, self.pickup.y, 'S', fontsize=14, fontweight='bold',
+                         ha='center', va='center', color='white', zorder=6)
+            
+            # House/Dropoff location - use house-like marker
+            self._ax.plot(self.dropoff.x, self.dropoff.y, marker='^', markersize=22, 
+                         color='#27AE60', markeredgecolor='#1E8449', markeredgewidth=2, zorder=5)
+            self._ax.plot(self.dropoff.x, self.dropoff.y, marker='s', markersize=14, 
+                         color='#27AE60', markeredgecolor='#1E8449', markeredgewidth=2, zorder=5)
+            self._ax.text(self.dropoff.x, self.dropoff.y - 0.05, 'H', fontsize=12, fontweight='bold',
+                         ha='center', va='center', color='white', zorder=6)
+            
+            # Obstacles - use X marker
+            for obs in self.obstacles:
+                self._ax.plot(obs.x, obs.y, marker='X', markersize=18, 
+                             color='#34495E', markeredgecolor='#1C2833', markeredgewidth=2, zorder=5)
+            
+            # Charging stations - use lightning bolt symbol or star
+            for station in self.charging_stations:
+                if station.x != self.pickup.x or station.y != self.pickup.y:
+                    self._ax.plot(station.x, station.y, marker='*', markersize=20, 
+                                 color='#F39C12', markeredgecolor='#D68910', markeredgewidth=1.5, zorder=5)
+            
+            # Drone with enhanced representation
+            # Draw drone body (main circle)
+            drone_body = plt.Circle((self._x, self._y), 0.15, 
+                                   facecolor='#2C3E50', edgecolor='#1A252F', linewidth=2, zorder=10)
+            self._ax.add_patch(drone_body)
+            
+            # Draw drone propellers (4 small circles at corners)
+            propeller_offset = 0.22
+            propeller_positions = [
+                (self._x - propeller_offset, self._y - propeller_offset),  # bottom-left
+                (self._x + propeller_offset, self._y - propeller_offset),  # bottom-right
+                (self._x - propeller_offset, self._y + propeller_offset),  # top-left
+                (self._x + propeller_offset, self._y + propeller_offset),  # top-right
+            ]
+            for px, py in propeller_positions:
+                propeller = plt.Circle((px, py), 0.08, 
+                                      facecolor='#E74C3C', edgecolor='#922B21', linewidth=1.5, zorder=9)
+                self._ax.add_patch(propeller)
+            
+            # Draw connecting arms (lines from body to propellers)
+            for px, py in propeller_positions:
+                self._ax.plot([self._x, px], [self._y, py], 
+                             color='#34495E', linewidth=2, zorder=8)
+            
+            # Package indicator
+            if self._has_package:
+                # Draw package below drone
+                package = plt.Rectangle((self._x - 0.12, self._y - 0.35), 0.24, 0.15,
+                                       facecolor='#8B4513', edgecolor='#5D2906', 
+                                       linewidth=2, zorder=7)
+                self._ax.add_patch(package)
+                # Package label
+                self._ax.text(self._x, self._y - 0.275, 'PKG', fontsize=6, fontweight='bold',
+                             ha='center', va='center', color='white', zorder=8)
+                # Connection line (drone carrying package)
+                self._ax.plot([self._x, self._x], [self._y - 0.15, self._y - 0.2], 
+                             color='#7F8C8D', linewidth=1.5, linestyle='--', zorder=7)
+            
+            # Drone center indicator (small dot)
+            self._ax.plot(self._x, self._y, marker='o', markersize=4, 
+                         color='#ECF0F1', markeredgecolor='#BDC3C7', markeredgewidth=1, zorder=11)
+            
+            # Battery indicator with color coding
+            battery_pct = self._battery / self.max_battery
+            if battery_pct > 0.6:
+                battery_color = '#27AE60'  # Green
+                battery_status = 'HIGH'
+            elif battery_pct > 0.3:
+                battery_color = '#F39C12'  # Orange
+                battery_status = 'MED'
+            else:
+                battery_color = '#E74C3C'  # Red
+                battery_status = 'LOW'
+            
+            # Title with battery and steps
+            title = f'Battery: {self._battery}/{self.max_battery} ({battery_status})  |  Steps: {self._steps}'
+            if self._has_package:
+                title += '  |  Package: CARRYING'
+            else:
+                title += '  |  Package: DELIVERED'
+            
+            self._ax.set_title(title, fontsize=14, fontweight='bold', pad=15)
+            
+            # Add legend
+            legend_elements = [
+                plt.Line2D([0], [0], marker='s', color='w', markerfacecolor='#AED6F1', 
+                          markersize=10, label='Store (Pickup)', markeredgecolor='#5DADE2'),
+                plt.Line2D([0], [0], marker='s', color='w', markerfacecolor='#ABEBC6', 
+                          markersize=10, label='House (Dropoff)', markeredgecolor='#58D68D'),
+                plt.Line2D([0], [0], marker='s', color='w', markerfacecolor='#2C3E50', 
+                          markersize=10, label='Obstacle', markeredgecolor='#1A252F'),
+                plt.Line2D([0], [0], marker='*', color='#F39C12', markersize=12, 
+                          label='Charging Station', markeredgecolor='#D68910', markeredgewidth=1),
+            ]
+            self._ax.legend(handles=legend_elements, loc='upper left', 
+                           bbox_to_anchor=(0, -0.05), ncol=4, frameon=False, fontsize=9)
+            
+            # Grid lines
+            self._ax.set_xticks(range(self.width))
+            self._ax.set_yticks(range(self.height))
+            self._ax.grid(True, alpha=0.3, linestyle='--', linewidth=0.5)
+            
             self._fig.canvas.draw()
             plt.pause(0.001)
 
