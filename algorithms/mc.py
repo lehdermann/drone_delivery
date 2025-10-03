@@ -5,6 +5,13 @@ from typing import List, Tuple
 
 import numpy as np
 
+try:
+    from tqdm import tqdm
+    HAS_TQDM = True
+except ImportError:
+    HAS_TQDM = False
+    tqdm = None
+
 
 def mc_control_epsilon_soft(
     env,
@@ -13,6 +20,9 @@ def mc_control_epsilon_soft(
     epsilon: float = 0.1,
     first_visit: bool = True,
     seed: int | None = 42,
+    verbose: bool = False,
+    verbose_every: int = 100,
+    interrupt_check: callable = None,
 ):
     """On-policy Monte Carlo Control with epsilon-soft policy, first-visit by default.
 
@@ -32,8 +42,22 @@ def mc_control_epsilon_soft(
         return int(np.argmax(Q[s]))
 
     returns_avg: List[float] = []
+    
+    # Setup progress bar or verbose mode
+    if verbose and HAS_TQDM:
+        pbar = tqdm(range(episodes), desc="MC Training", unit="ep")
+    elif verbose:
+        print(f"[MC] Starting training (updates every {verbose_every} episodes)")
+        pbar = range(episodes)
+    else:
+        pbar = range(episodes)
 
-    for _ in range(episodes):
+    for ep in pbar:
+        # Check for interruption
+        if interrupt_check and interrupt_check():
+            print("\n[MC] Training interrupted by user.")
+            break
+            
         # Generate episode
         episode: List[Tuple[int, int, float]] = []  # (s, a, r)
         s, _ = env.reset()
@@ -59,7 +83,20 @@ def mc_control_epsilon_soft(
             returns_count[s_t, a_t] += 1
             alpha = 1.0 / float(returns_count[s_t, a_t])
             Q[s_t, a_t] += alpha * (G - Q[s_t, a_t])
-        returns_avg.append(sum(r for _, _, r in episode))
+        
+        ep_return = sum(r for _, _, r in episode)
+        returns_avg.append(ep_return)
+        
+        # Update progress bar with metrics
+        if verbose and HAS_TQDM and isinstance(pbar, tqdm):
+            avg_last = np.mean(returns_avg[-100:]) if len(returns_avg) >= 100 else np.mean(returns_avg)
+            pbar.set_postfix({'avg_return': f'{avg_last:.2f}', 'last_return': f'{ep_return:.2f}'})
+        elif verbose and not HAS_TQDM and (ep + 1) % verbose_every == 0:
+            avg_last = np.mean(returns_avg[-verbose_every:]) if len(returns_avg) >= verbose_every else np.mean(returns_avg)
+            print(f"[MC] Episode {ep + 1}/{episodes} | Avg return (last {min(len(returns_avg), verbose_every)}): {avg_last:.2f}")
+    
+    if verbose and HAS_TQDM and isinstance(pbar, tqdm):
+        pbar.close()
 
     policy = np.argmax(Q, axis=1).astype(np.int64)
     return policy, Q, returns_avg
@@ -74,6 +111,9 @@ def mc_control_off_policy_is(
     behavior_epsilon: float = 0.2,
     weighted: bool = True,
     seed: int | None = 42,
+    verbose: bool = False,
+    verbose_every: int = 100,
+    interrupt_check: callable = None,
     # Debug options
     debug_behavior: bool = False,
     debug_behavior_episodes: int = 100,
@@ -125,7 +165,21 @@ def mc_control_off_policy_is(
     dbg_total = 0
     dbg_greedy = 0
 
-    for ep_idx in range(episodes):
+    # Setup progress bar or verbose mode
+    if verbose and HAS_TQDM:
+        pbar = tqdm(range(episodes), desc="MC Off-Policy", unit="ep")
+    elif verbose:
+        print(f"[MC Off-Policy] Starting training (updates every {verbose_every} episodes)")
+        pbar = range(episodes)
+    else:
+        pbar = range(episodes)
+
+    for ep_idx in pbar:
+        # Check for interruption
+        if interrupt_check and interrupt_check():
+            print("\n[MC Off-Policy] Training interrupted by user.")
+            break
+            
         # Generate episode with behavior policy b
         episode: List[Tuple[int, int, float, float]] = []  # (s, a, r, b_prob)
         s, _ = env.reset()
@@ -170,7 +224,19 @@ def mc_control_off_policy_is(
                 break  # safety guard
             W = W / bprob_t
 
-        returns_avg.append(sum(r for (_, _, r, _) in episode))
+        ep_return = sum(r for _, _, r, _ in episode)
+        returns_avg.append(ep_return)
+        
+        # Update progress bar with metrics
+        if verbose and HAS_TQDM and isinstance(pbar, tqdm):
+            avg_last = np.mean(returns_avg[-100:]) if len(returns_avg) >= 100 else np.mean(returns_avg)
+            pbar.set_postfix({'avg_return': f'{avg_last:.2f}', 'last_return': f'{ep_return:.2f}'})
+        elif verbose and not HAS_TQDM and (ep_idx + 1) % verbose_every == 0:
+            avg_last = np.mean(returns_avg[-verbose_every:]) if len(returns_avg) >= verbose_every else np.mean(returns_avg)
+            print(f"[MC Off-Policy] Episode {ep_idx + 1}/{episodes} | Avg return (last {min(len(returns_avg), verbose_every)}): {avg_last:.2f}")
+    
+    if verbose and HAS_TQDM and isinstance(pbar, tqdm):
+        pbar.close()
 
     # Print debug behavior policy stats
     if debug_behavior and dbg_total > 0:
