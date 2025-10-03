@@ -40,53 +40,125 @@ if 'replay_delivered' in vi_df.columns:
 mc_df['wind_slip'] = pd.to_numeric(mc_df['wind_slip'], errors='coerce')
 vi_df['wind_slip'] = pd.to_numeric(vi_df['wind_slip'], errors='coerce')
 
+# Identify MC on-policy vs off-policy
+# Off-policy has 'behavior' column or can be identified by presence of off_policy flag
+if 'behavior' in mc_df.columns:
+    mc_on = mc_df[mc_df['behavior'].isna()].copy()
+    mc_off = mc_df[mc_df['behavior'].notna()].copy()
+else:
+    # Fallback: assume first half is on-policy, second half is off-policy
+    # Better: check for specific columns that only exist in off-policy
+    mc_on = mc_df.copy()
+    mc_off = pd.DataFrame()
+
+print(f"\nSplit MC data: {len(mc_on)} on-policy, {len(mc_off)} off-policy")
+
 # Drop rows with NaN values
-mc_df = mc_df.dropna(subset=['wind_slip', 'replay_delivered'])
+mc_on = mc_on.dropna(subset=['wind_slip', 'replay_delivered'])
+if len(mc_off) > 0:
+    mc_off = mc_off.dropna(subset=['wind_slip', 'replay_delivered'])
 vi_df = vi_df.dropna(subset=['wind_slip', 'replay_delivered'])
 
-print(f"\nAfter cleaning: {len(mc_df)} MC experiments, {len(vi_df)} VI experiments")
+print(f"After cleaning: {len(mc_on)} MC on-policy, {len(mc_off)} MC off-policy, {len(vi_df)} VI experiments")
 
-# Process Monte Carlo data
-mc_grouped = mc_df.groupby('wind_slip').agg(
-    avg_iterations=('episodes', 'mean'),
-    success_rate=('replay_delivered', 'mean')
+# Process data by algorithm type
+mc_on_grouped = mc_on.groupby('wind_slip').agg(
+    success_rate=('replay_delivered', 'mean'),
+    avg_return=('replay_return', 'mean'),
+    avg_steps=('replay_steps', 'mean')
 ).reset_index()
 
-# Process Value Iteration data
+if len(mc_off) > 0:
+    mc_off_grouped = mc_off.groupby('wind_slip').agg(
+        success_rate=('replay_delivered', 'mean'),
+        avg_return=('replay_return', 'mean'),
+        avg_steps=('replay_steps', 'mean')
+    ).reset_index()
+else:
+    mc_off_grouped = pd.DataFrame()
+
 vi_grouped = vi_df.groupby('wind_slip').agg(
-    avg_iterations=('vi_iterations', 'mean'),
-    success_rate=('replay_delivered', 'mean')
+    success_rate=('replay_delivered', 'mean'),
+    avg_return=('replay_return', 'mean'),
+    avg_steps=('replay_steps', 'mean'),
+    avg_vi_iters=('vi_iterations', 'mean')
 ).reset_index()
 
-print("\nMC grouped data:")
-print(mc_grouped)
-print("\nVI grouped data:")
+print("\nMC On-Policy grouped:")
+print(mc_on_grouped)
+if len(mc_off_grouped) > 0:
+    print("\nMC Off-Policy grouped:")
+    print(mc_off_grouped)
+print("\nVI grouped:")
 print(vi_grouped)
 
-# Create the plot
-fig, ax1 = plt.subplots(figsize=(12, 6))
+# Create subplots for comprehensive comparison
+fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+fig.suptitle('Algorithm Comparison: VI vs MC On-Policy vs MC Off-Policy', fontsize=16, fontweight='bold')
 
-# Plot iterations for both algorithms on the primary y-axis
-ax1.plot(mc_grouped['wind_slip'], mc_grouped['avg_iterations'], 'o-', label='MC Iterations', color='tab:blue')
-ax1.plot(vi_grouped['wind_slip'], vi_grouped['avg_iterations'], 's-', label='VI Iterations', color='tab:cyan')
-ax1.set_xlabel('Probabilidade de Slip (p_slip)')
-ax1.set_ylabel('Iterações para Convergência', color='tab:blue')
-ax1.tick_params(axis='y', labelcolor='tab:blue')
-ax1.grid(True)
+# Plot 1: Success Rate vs Wind Slip
+ax = axes[0, 0]
+ax.plot(vi_grouped['wind_slip'], vi_grouped['success_rate'], 's-', label='VI', color='tab:blue', linewidth=2, markersize=8)
+ax.plot(mc_on_grouped['wind_slip'], mc_on_grouped['success_rate'], 'o-', label='MC On-Policy', color='tab:orange', linewidth=2, markersize=8)
+if len(mc_off_grouped) > 0:
+    ax.plot(mc_off_grouped['wind_slip'], mc_off_grouped['success_rate'], '^-', label='MC Off-Policy', color='tab:green', linewidth=2, markersize=8)
+ax.set_xlabel('Wind Slip Probability', fontsize=11)
+ax.set_ylabel('Success Rate', fontsize=11)
+ax.set_title('Success Rate vs Wind Slip', fontsize=12, fontweight='bold')
+ax.legend()
+ax.grid(True, alpha=0.3)
+ax.set_ylim([0, 1.05])
 
-# Create a secondary y-axis for success rate
-ax2 = ax1.twinx()
-ax2.plot(mc_grouped['wind_slip'], mc_grouped['success_rate'], 'o--', label='MC Success Rate', color='tab:red')
-ax2.plot(vi_grouped['wind_slip'], vi_grouped['success_rate'], 's--', label='VI Success Rate', color='tab:orange')
-ax2.set_ylabel('Taxa de Sucesso', color='tab:red')
-ax2.tick_params(axis='y', labelcolor='tab:red')
+# Plot 2: Average Return vs Wind Slip
+ax = axes[0, 1]
+ax.plot(vi_grouped['wind_slip'], vi_grouped['avg_return'], 's-', label='VI', color='tab:blue', linewidth=2, markersize=8)
+ax.plot(mc_on_grouped['wind_slip'], mc_on_grouped['avg_return'], 'o-', label='MC On-Policy', color='tab:orange', linewidth=2, markersize=8)
+if len(mc_off_grouped) > 0:
+    ax.plot(mc_off_grouped['wind_slip'], mc_off_grouped['avg_return'], '^-', label='MC Off-Policy', color='tab:green', linewidth=2, markersize=8)
+ax.set_xlabel('Wind Slip Probability', fontsize=11)
+ax.set_ylabel('Average Return', fontsize=11)
+ax.set_title('Average Return vs Wind Slip', fontsize=12, fontweight='bold')
+ax.legend()
+ax.grid(True, alpha=0.3)
 
-# Add title and legend
-plt.title('Performance do Algoritmo vs. Dificuldade do Ambiente')
-fig.tight_layout()
-fig.legend(loc='upper left', bbox_to_anchor=(0.1, 0.9))
+# Plot 3: Average Steps vs Wind Slip
+ax = axes[1, 0]
+ax.plot(vi_grouped['wind_slip'], vi_grouped['avg_steps'], 's-', label='VI', color='tab:blue', linewidth=2, markersize=8)
+ax.plot(mc_on_grouped['wind_slip'], mc_on_grouped['avg_steps'], 'o-', label='MC On-Policy', color='tab:orange', linewidth=2, markersize=8)
+if len(mc_off_grouped) > 0:
+    ax.plot(mc_off_grouped['wind_slip'], mc_off_grouped['avg_steps'], '^-', label='MC Off-Policy', color='tab:green', linewidth=2, markersize=8)
+ax.set_xlabel('Wind Slip Probability', fontsize=11)
+ax.set_ylabel('Average Steps', fontsize=11)
+ax.set_title('Average Steps to Delivery vs Wind Slip', fontsize=12, fontweight='bold')
+ax.legend()
+ax.grid(True, alpha=0.3)
+
+# Plot 4: VI Iterations (only for VI)
+ax = axes[1, 1]
+ax.plot(vi_grouped['wind_slip'], vi_grouped['avg_vi_iters'], 's-', label='VI Iterations', color='tab:purple', linewidth=2, markersize=8)
+ax.set_xlabel('Wind Slip Probability', fontsize=11)
+ax.set_ylabel('VI Iterations to Convergence', fontsize=11)
+ax.set_title('VI Convergence Speed', fontsize=12, fontweight='bold')
+ax.legend()
+ax.grid(True, alpha=0.3)
+ax.text(0.5, 0.95, 'Note: MC uses fixed episodes, not convergence-based', 
+        transform=ax.transAxes, ha='center', va='top', fontsize=9, style='italic', 
+        bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.3))
+
+plt.tight_layout()
 
 # Save the plot
-plt.savefig('performance_plot.png')
+plt.savefig('performance_comparison.png', dpi=150, bbox_inches='tight')
+print("\nPlot saved as performance_comparison.png")
 
-print("Plot saved as performance_plot.png")
+# Print summary statistics
+print("\n" + "="*60)
+print("SUMMARY STATISTICS")
+print("="*60)
+print("\nValue Iteration:")
+print(vi_grouped.to_string(index=False))
+print("\nMC On-Policy:")
+print(mc_on_grouped.to_string(index=False))
+if len(mc_off_grouped) > 0:
+    print("\nMC Off-Policy:")
+    print(mc_off_grouped.to_string(index=False))
