@@ -47,15 +47,102 @@ Default settings keep the state space small and suitable for tabular methods.
 ## Project Structure
 - `envs/drone_delivery.py` — Gymnasium environment with `enumerate_transitions(s, a)` for DP.
 - `algorithms/dp.py` — Value Iteration and Policy Iteration implementations.
-- `algorithms/mc.py` — On-policy MC Control (epsilon-soft, first-visit).
+- `algorithms/mc.py` — On-policy and Off-policy MC Control with Importance Sampling.
+- `examples/replay_vi_policy.py` — Visualize and evaluate Value Iteration policies.
+- `examples/replay_mc_policy.py` — Visualize and evaluate Monte Carlo policies.
+- `docs/examples_guide.md` — Comprehensive guide for using the example scripts.
+- `docs/ALGORITHMS.md` — Detailed algorithm documentation and implementation notes.
+- `run_experiments.sh` — Automated experiment suite for VI and MC.
 - `requirements.txt` — Lightweight dependencies for the tabular project.
 
 ## Setup
 Install dependencies (optionally in a virtual environment):
 
-```
+```bash
 pip install -r requirements.txt
 ```
 
-Note: The repository may already have `gymnasium` and `numpy` installed via the top-level `requirements.txt`. The `requirements.txt` adds optional packages used here (e.g., matplotlib, pandas).
+Note: The repository may already have `gymnasium` and `numpy` installed via the top-level `requirements.txt`. The `requirements.txt` adds optional packages used here (e.g., matplotlib, pandas, tqdm).
+
+## Quick Start
+
+### Visualize Value Iteration Policy
+
+```bash
+python examples/replay_vi_policy.py \
+  --max-battery 30 \
+  --obstacles default \
+  --sleep 0.5
+```
+
+### Visualize Monte Carlo Policy
+
+```bash
+python examples/replay_mc_policy.py \
+  --max-battery 30 \
+  --episodes 5000 \
+  --obstacles default \
+  --sleep 0.5
+```
+
+### Run Automated Experiments
+
+```bash
+./run_experiments.sh
+```
+
+Results are saved to `vi_experiments.csv` and `mc_experiments.csv`.
+
+## Features
+
+### Enhanced Visualization
+- **Live matplotlib rendering** with drone, obstacles, charging stations, and package
+- **Trajectory tracking** showing step-by-step decisions
+- **Policy summary** with action distribution and Q-values
+- **Progress monitoring** with tqdm progress bars for MC training
+- **Graceful interruption** (Ctrl+C) with partial result saving
+
+### Multiple Charging Stations
+The environment supports strategic placement of charging stations:
+- Default: Store location (0,0) plus mid-grid stations at (3,6) and (6,3)
+- Customizable via `charging_stations` parameter
+
+### Visual Elements
+- 🏪 **S** = Store (pickup location)
+- 🏠 **H** = House (delivery location)
+- ⬛ **X** = Obstacles
+- ⭐ **★** = Charging stations
+- 🚁 **Drone** = Red triangle with package indicator
+- **Battery indicator** with color coding (green/orange/red)
+
+## Documentation
+
+- **[Examples Guide](docs/examples_guide.md)** - Comprehensive guide for using visualization scripts
+- **[Algorithms Documentation](docs/ALGORITHMS.md)** - Detailed algorithm specifications and implementation notes
+
+## Example Output
+
+```
+============================================================
+LEARNED POLICY SUMMARY
+============================================================
+Total states: 2352
+Action distribution across all states:
+  UP      :  450 states ( 19.1%)
+  DOWN    :  520 states ( 22.1%)
+  RIGHT   :  890 states ( 37.8%)
+  ...
+
+============================================================
+TRAJECTORY USING OPTIMAL POLICY
+============================================================
+Step   0: pos=(0,0) bat=30 📦 → RIGHT  → reward=  -1.0
+Step   1: pos=(1,0) bat=29 📦 → RIGHT  → reward=  -1.0
+...
+Step  16: pos=(6,6) bat=14 ✓ → TERMINAL
+============================================================
+RESULT: SUCCESS ✓
+Total steps: 16, Total return: 34.00
+============================================================
+```
 

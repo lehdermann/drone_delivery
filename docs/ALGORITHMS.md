@@ -97,7 +97,7 @@ After convergence, a greedy policy is derived by recomputing `q_values` and taki
 
 ## Monte Carlo Control (On-Policy, ε-soft) (`algorithms/mc.py`)
 
-Function: `mc_control_epsilon_soft(env, episodes=10_000, gamma=0.99, epsilon=0.1, first_visit=True, seed=42)`
+Function: `mc_control_epsilon_soft(env, episodes=10_000, gamma=0.99, epsilon=0.1, first_visit=True, seed=42, verbose=False, verbose_every=100, interrupt_check=None)`
 
 - Goal: Learn action-value function `Q(s,a)` and its greedy policy by generating episodes and applying Monte Carlo returns.
 - Assumptions: Tabular discrete `env.nS`, `env.nA`, and standard Gymnasium `reset()`/`step()` APIs. No model is required.
@@ -109,6 +109,13 @@ Function: `mc_control_epsilon_soft(env, episodes=10_000, gamma=0.99, epsilon=0.1
   - Maintain `returns_count[s,a]`.
   - `α = 1 / returns_count[s,a]`.
   - `Q[s,a] <- Q[s,a] + α * (G - Q[s,a])`.
+- **Progress monitoring** (new):
+  - `verbose=True`: Enable progress reporting with tqdm (if available) or periodic prints
+  - `verbose_every`: Frequency of progress updates (default: 100 episodes)
+  - Shows average return over last 100 episodes and current episode return
+- **Interruption handling** (new):
+  - `interrupt_check`: Optional callable that returns `True` to stop training gracefully
+  - Allows Ctrl+C handling without losing partial results
 - Return values:
   - `policy`: greedy w.r.t. learned `Q` (`np.argmax(Q, axis=1)`).
   - `Q`: `np.ndarray [nS, nA]`.
@@ -134,7 +141,7 @@ policy <- argmax_a Q[s,a]
 
 ## Monte Carlo Control (Off-Policy, Importance Sampling) (`algorithms/mc.py`)
 
-Function: `mc_control_off_policy_is(env, episodes=10_000, gamma=0.99, behavior="epsilon", behavior_epsilon=0.2, weighted=True, seed=42)`
+Function: `mc_control_off_policy_is(env, episodes=10_000, gamma=0.99, behavior="epsilon", behavior_epsilon=0.2, weighted=True, seed=42, verbose=False, verbose_every=100, interrupt_check=None, debug_behavior=False, debug_behavior_episodes=100)`
 
 - Goal: Learn a greedy target policy `π(s) = argmax_a Q(s,a)` while generating data with a different behavior policy `b(a|s)`.
 - Supported behavior policies:
@@ -143,6 +150,10 @@ Function: `mc_control_off_policy_is(env, episodes=10_000, gamma=0.99, behavior="
 - Update: Backward pass with importance sampling weights. Uses Weighted IS by default for better stability (maintains cumulative weights `C[s,a]` and updates `Q[s,a] += (W/C[s,a]) * (G - Q[s,a])`).
 - Ordinary IS option: set `weighted=False` to use ordinary IS (higher variance).
 - Early termination: if at time `t` the action is not greedy under the current target policy, the backward loop breaks (since `π(a_t|s_t)=0`).
+- **Progress monitoring** (new): Same as on-policy MC (verbose, verbose_every, interrupt_check)
+- **Debug utilities** (new):
+  - `debug_behavior=True`: Print empirical behavior policy statistics
+  - `debug_behavior_episodes`: Number of episodes to sample for behavior stats
 - Returns:
   - `policy`: greedy w.r.t. learned `Q`.
   - `Q`: `np.ndarray [nS, nA]`.
