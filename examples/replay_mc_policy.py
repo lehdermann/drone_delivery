@@ -26,10 +26,49 @@ import argparse
 import time
 import csv
 import os
+import signal
 import numpy as np
+
+import sys
+from pathlib import Path
+# Add parent directory to path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from envs.drone_delivery import DroneDeliveryEnv
 from algorithms.mc import mc_control_epsilon_soft, mc_control_off_policy_is
+
+
+def print_policy_summary(env, policy, Q=None):
+    """Print a summary of the learned policy."""
+    action_names = ['UP', 'DOWN', 'LEFT', 'RIGHT', 'STAY', 'CHARGE']
+    action_counts = {name: 0 for name in action_names}
+    
+    # Count action distribution
+    for s in range(env.nS):
+        a = int(policy[s])
+        action_counts[action_names[a]] += 1
+    
+    print("\n" + "="*60)
+    print("LEARNED POLICY SUMMARY")
+    print("="*60)
+    print(f"Total states: {env.nS}")
+    print("\nAction distribution across all states:")
+    for action, count in action_counts.items():
+        pct = 100 * count / env.nS
+        print(f"  {action:8s}: {count:4d} states ({pct:5.1f}%)")
+    
+    # Show policy for initial state
+    s0 = env._encode(0, 0, env.max_battery, 1)  # Start: (0,0), full battery, has package
+    a0 = int(policy[s0])
+    print(f"\nInitial state policy:")
+    print(f"  State: pos=(0,0), battery={env.max_battery}, has_package=True")
+    print(f"  Action: {action_names[a0]}")
+    
+    if Q is not None:
+        print(f"  Q-values: {Q[s0]}")
+        print(f"  Best Q-value: {Q[s0, a0]:.2f}")
+    
+    print("="*60 + "\n")
 
 
 def parse_args() -> argparse.Namespace:
@@ -40,6 +79,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--max-battery", dest="max_battery", type=int, default=12)
     p.add_argument("--charge-rate", dest="charge_rate", type=int, default=2)
     p.add_argument("--wind-slip", dest="wind_slip", type=float, default=0.05)
+    p.add_argument("--obstacles", type=str, default="default", 
+                   help="Obstacles: 'none', 'default', or comma-separated x,y pairs like '2,3;3,3;4,3'")
     p.add_argument("--seed", type=int, default=0)
     # MC
     p.add_argument("--gamma", type=float, default=0.99)
@@ -69,6 +110,43 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
+    
+    # Setup signal handler for graceful shutdown
+    interrupted = False
+    
+    def signal_handler(sig, frame):
+        nonlocal interrupted
+        print("\n[replay] Interrupted by user (Ctrl+C). Cleaning up...")
+        interrupted = True
+    
+    signal.signal(signal.SIGINT, signal_handler)
+
+    # Parse obstacles
+    obstacles = None
+    if args.obstacles == "default":
+        # Default obstacle configuration for 7x7 grid
+        obstacles = [
+            (3, 1), (3, 2), (3, 3),  # vertical wall
+            (1, 4), (2, 4),           # horizontal wall
+            (5, 3), (5, 4),           # another wall
+        ]
+    elif args.obstacles != "none":
+        # Parse custom obstacles from string like "2,3;3,3;4,3"
+        try:
+            obstacles = []
+            for pair in args.obstacles.split(";"):
+                x, y = map(int, pair.split(","))
+                obstacles.append((x, y))
+        except Exception:
+            print(f"[warning] Could not parse obstacles '{args.obstacles}', using none")
+            obstacles = None
+
+    # Add charging stations at strategic locations (including pickup)
+    charging_stations = [
+        (0, 0),  # At pickup/store
+        (3, 6),  # Mid-bottom
+        (6, 3),  # Mid-right
+    ]
 
     # Build env with live rendering
     env = DroneDeliveryEnv(
@@ -77,12 +155,19 @@ def main() -> None:
         max_battery=args.max_battery,
         charge_rate=args.charge_rate,
         wind_slip=args.wind_slip,
+        obstacles=obstacles,
+        charging_stations=charging_stations,
         render_mode="human",
         seed=args.seed,
     )
 
     # Compute MC policy (on-policy by default; off-policy when enabled)
     print(f"[replay] Starting MC training for {args.episodes} episodes... (off_policy={args.off_policy})")
+    
+    # Create interrupt check function
+    def check_interrupt():
+        return interrupted
+    
     if args.off_policy:
         policy, Q, returns_avg = mc_control_off_policy_is(
             env,
@@ -92,12 +177,22 @@ def main() -> None:
             behavior_epsilon=float(args.behavior_epsilon),
             weighted=bool(args.off_weighted),
             seed=args.seed,
+            verbose=True,
+            verbose_every=max(1, args.episodes // 50),  # Show ~50 progress updates
+            interrupt_check=check_interrupt,
             debug_behavior=bool(args.debug_behavior),
             debug_behavior_episodes=int(args.debug_behavior_episodes),
         )
     else:
         policy, Q, returns_avg = mc_control_epsilon_soft(
-            env, episodes=args.episodes, gamma=args.gamma, epsilon=args.epsilon, seed=args.seed
+            env, 
+            episodes=args.episodes, 
+            gamma=args.gamma, 
+            epsilon=args.epsilon, 
+            seed=args.seed,
+            verbose=True,
+            verbose_every=max(1, args.episodes // 50),  # Show ~50 progress updates
+            interrupt_check=check_interrupt,
         )
     
     # Calculate statistics over the last 100 episodes
@@ -106,6 +201,9 @@ def main() -> None:
     var_return = np.var(last_100_returns) if len(last_100_returns) > 0 else 0.0
     std_return = np.std(last_100_returns) if len(last_100_returns) > 0 else 0.0
     print(f"[replay] MC training complete. Stats over last 100 episodes: Avg={avg_return:.2f}, Var={var_return:.2f}, Std={std_return:.2f}")
+    
+    # Print policy summary
+    print_policy_summary(env, policy, Q)
 
     # Optional greedy evaluation without rendering
     eval_metrics = {}
@@ -163,23 +261,70 @@ def main() -> None:
         eval_env.close()
 
     # Replay one episode greedily
-    # Note: we reset with a different seed for replay to get a representative sample
-    # of the policy's performance, rather than replaying a path seen in training.
-    replay_seed = args.seed + 1 if args.seed is not None else None
-    s, _ = env.reset(seed=replay_seed)
-    done = False
-    truncated = False
-    total_return = 0.0
-    steps = 0
-    while not (done or truncated):
-        a = int(policy[s])
-        s, r, done, truncated, info = env.step(a)
-        total_return += float(r)
-        steps += 1
-        time.sleep(max(0.0, args.sleep))
+    if not interrupted:
+        # Note: we reset with a different seed for replay to get a representative sample
+        # of the policy's performance, rather than replaying a path seen in training.
+        replay_seed = args.seed + 1 if args.seed is not None else None
+        s, _ = env.reset(seed=replay_seed)
+        done = False
+        truncated = False
+        total_return = 0.0
+        steps = 0
+        
+        # Track trajectory
+        action_names = ['UP', 'DOWN', 'LEFT', 'RIGHT', 'STAY', 'CHARGE']
+        trajectory = []
+        
+        print("\n" + "="*60)
+        print("TRAJECTORY USING OPTIMAL POLICY")
+        print("="*60)
+        
+        while not (done or truncated) and not interrupted:
+            # Decode current state
+            x, y, battery, has_pkg = env._decode(s)
+            a = int(policy[s])
+            
+            # Store trajectory info
+            trajectory.append({
+                'step': steps,
+                'pos': (x, y),
+                'battery': battery,
+                'has_package': has_pkg,
+                'action': action_names[a]
+            })
+            
+            # Print step info (only first 10 and last 10 steps for brevity)
+            if steps < 10 or steps >= 190:
+                pkg_status = "📦" if has_pkg else "✓"
+                print(f"Step {steps:3d}: pos=({x},{y}) bat={battery:2d} {pkg_status} → {action_names[a]:6s}", end="")
+            elif steps == 10:
+                print("  ... (trajectory continues) ...")
+            
+            s, r, done, truncated, info = env.step(a)
+            total_return += float(r)
+            steps += 1
+            
+            # Print reward for last step
+            if steps <= 10 or steps >= 190:
+                print(f" → reward={r:6.1f}")
+            
+            time.sleep(max(0.0, args.sleep))
 
-    delivered = bool(info.get("delivered", False))
-    print(f"[replay] Done. steps={steps}, return={total_return:.2f}, delivered={delivered}")
+        delivered = bool(info.get("delivered", False))
+        
+        # Final state
+        x, y, battery, has_pkg = env._decode(s)
+        print(f"Step {steps:3d}: pos=({x},{y}) bat={battery:2d} {'✓' if delivered else '✗'} → TERMINAL")
+        print("="*60)
+        print(f"RESULT: {'SUCCESS ✓' if delivered else 'FAILED ✗'}")
+        print(f"Total steps: {steps}, Total return: {total_return:.2f}")
+        print("="*60 + "\n")
+    else:
+        print("[replay] Replay skipped due to interruption.")
+        steps = 0
+        total_return = 0.0
+        delivered = False
+        trajectory = []
 
     # Save results to CSV
     results_filepath = "mc_experiments.csv"
@@ -209,7 +354,14 @@ def main() -> None:
         writer.writerow(log_data)
     print(f"[replay] Results appended to {results_filepath}")
 
-    env.close()
+    try:
+        env.close()
+    except Exception as e:
+        print(f"[replay] Warning: Error closing environment: {e}")
+    
+    if interrupted:
+        print("[replay] Exiting due to interruption.")
+        exit(130)  # Standard exit code for SIGINT
 
 
 if __name__ == "__main__":
