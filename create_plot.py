@@ -32,9 +32,12 @@ print("VI columns:", vi_df.columns.tolist())
 
 # Convert boolean columns from string to actual boolean
 if 'replay_delivered' in mc_df.columns:
-    mc_df['replay_delivered'] = mc_df['replay_delivered'].map({'True': True, 'False': False, True: True, False: False})
+    # A more robust way to convert string 'True'/'False' to boolean, handling case-insensitivity
+    mc_df['replay_delivered'] = mc_df['replay_delivered'].apply(lambda x: str(x).lower() == 'true' if isinstance(x, str) else bool(x))
+
 if 'replay_delivered' in vi_df.columns:
-    vi_df['replay_delivered'] = vi_df['replay_delivered'].map({'True': True, 'False': False, True: True, False: False})
+    # Apply the same robust conversion for the VI dataframe
+    vi_df['replay_delivered'] = vi_df['replay_delivered'].apply(lambda x: str(x).lower() == 'true' if isinstance(x, str) else bool(x))
 
 # Convert wind_slip to numeric
 mc_df['wind_slip'] = pd.to_numeric(mc_df['wind_slip'], errors='coerce')
@@ -42,9 +45,9 @@ vi_df['wind_slip'] = pd.to_numeric(vi_df['wind_slip'], errors='coerce')
 
 # Identify MC on-policy vs off-policy
 # Off-policy has 'behavior' column or can be identified by presence of off_policy flag
-if 'behavior' in mc_df.columns:
-    mc_on = mc_df[mc_df['behavior'].isna()].copy()
-    mc_off = mc_df[mc_df['behavior'].notna()].copy()
+if 'off_policy' in mc_df.columns:
+    mc_on = mc_df[mc_df['off_policy'] == False].copy()
+    mc_off = mc_df[mc_df['off_policy'] == True].copy()
 else:
     # Fallback: assume first half is on-policy, second half is off-policy
     # Better: check for specific columns that only exist in off-policy
@@ -148,7 +151,7 @@ ax.text(0.5, 0.95, 'Note: MC uses fixed episodes, not convergence-based',
 plt.tight_layout()
 
 # Save the plot
-plt.savefig('performance_comparison.png', dpi=150, bbox_inches='tight')
+plt.savefig('performance_plot.png', dpi=150, bbox_inches='tight')
 print("\nPlot saved as performance_comparison.png")
 
 # Print summary statistics
