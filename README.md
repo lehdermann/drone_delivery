@@ -2,6 +2,8 @@
 
 This project implements a custom Gymnasium environment for a drone delivery task with wind-induced action noise and a battery constraint. It includes tabular algorithms from Sutton & Barto (RL: An Introduction): Dynamic Programming (Value Iteration, Policy Iteration) and Monte Carlo Control (on-policy, epsilon-soft, first-visit).
 
+![Drone Delivery Environment](docs/environment.png)
+
 ## Environment Summary
 - Grid world (discrete): width × height.
 - Obstacles (impassable cells).
