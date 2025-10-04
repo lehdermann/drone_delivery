@@ -1,232 +1,885 @@
 ========================================================================
-Starting new experiment suite at Sun Sep 28 15:04:11 -03 2025
+Starting new experiment suite at Sat Oct  4 12:56:06 -03 2025
+MC Episodes: 5000
 ========================================================================
 Starting experiment suite...
 
 --- Running Value Iteration (VI) Experiments ---
-[VI Run 0/9] wind_slip=.10, max_battery=7, seed=0
-[replay] VI converged in 22 sweeps; last delta=0.0
-[replay] Done. steps=7, return=-17.00, delivered=False
+[VI Run 0/9] wind_slip=.02, max_battery=20, seed=0
+[replay] VI converged in 48 sweeps; last delta=8.085861655260373e-05
+
+============================================================
+LEARNED POLICY SUMMARY
+============================================================
+Total states: 2058
+
+Action distribution across all states:
+  UP      :  465 states ( 22.6%)
+  DOWN    :  720 states ( 35.0%)
+  LEFT    :  331 states ( 16.1%)
+  RIGHT   :  499 states ( 24.2%)
+  STAY    :   20 states (  1.0%)
+  CHARGE  :   23 states (  1.1%)
+
+Initial state policy:
+  State: pos=(0,0), battery=20, has_package=True
+  Action: DOWN
+  State value V(s): 29.01
+============================================================
+
+[replay] SUCCESS: steps=12, return=38.00
 [replay] Results appended to vi_experiments.csv
-[VI Run 1/9] wind_slip=.24, max_battery=9, seed=1
-[replay] VI converged in 32 sweeps; last delta=0.0
-[replay] Done. steps=9, return=-19.00, delivered=False
+[VI Run 1/9] wind_slip=0, max_battery=26, seed=1
+[replay] VI converged in 38 sweeps; last delta=0.0
+
+============================================================
+LEARNED POLICY SUMMARY
+============================================================
+Total states: 2646
+
+Action distribution across all states:
+  UP      : 1182 states ( 44.7%)
+  DOWN    : 1012 states ( 38.2%)
+  LEFT    :  112 states (  4.2%)
+  RIGHT   :  298 states ( 11.3%)
+  STAY    :   26 states (  1.0%)
+  CHARGE  :   16 states (  0.6%)
+
+Initial state policy:
+  State: pos=(0,0), battery=26, has_package=True
+  Action: DOWN
+  State value V(s): 33.41
+============================================================
+
+[replay] SUCCESS: steps=12, return=38.00
 [replay] Results appended to vi_experiments.csv
-[VI Run 2/9] wind_slip=.06, max_battery=6, seed=2
-[replay] VI converged in 20 sweeps; last delta=0.0
-[replay] Done. steps=6, return=-16.00, delivered=False
+[VI Run 2/9] wind_slip=.11, max_battery=20, seed=2
+[replay] VI converged in 63 sweeps; last delta=8.540040453652864e-05
+
+============================================================
+LEARNED POLICY SUMMARY
+============================================================
+Total states: 2058
+
+Action distribution across all states:
+  UP      :  457 states ( 22.2%)
+  DOWN    :  727 states ( 35.3%)
+  LEFT    :  336 states ( 16.3%)
+  RIGHT   :  484 states ( 23.5%)
+  STAY    :   20 states (  1.0%)
+  CHARGE  :   34 states (  1.7%)
+
+Initial state policy:
+  State: pos=(0,0), battery=20, has_package=True
+  Action: DOWN
+  State value V(s): -0.68
+============================================================
+
+[replay] SUCCESS: steps=14, return=36.00
 [replay] Results appended to vi_experiments.csv
-[VI Run 3/9] wind_slip=.30, max_battery=5, seed=3
-[replay] VI converged in 31 sweeps; last delta=0.0
-[replay] Done. steps=5, return=-15.00, delivered=False
+[VI Run 3/9] wind_slip=.02, max_battery=23, seed=3
+[replay] VI converged in 48 sweeps; last delta=8.085861655260373e-05
+
+============================================================
+LEARNED POLICY SUMMARY
+============================================================
+Total states: 2352
+
+Action distribution across all states:
+  UP      :  510 states ( 21.7%)
+  DOWN    :  837 states ( 35.6%)
+  LEFT    :  379 states ( 16.1%)
+  RIGHT   :  580 states ( 24.7%)
+  STAY    :   23 states (  1.0%)
+  CHARGE  :   23 states (  1.0%)
+
+Initial state policy:
+  State: pos=(0,0), battery=23, has_package=True
+  Action: DOWN
+  State value V(s): 29.01
+============================================================
+
+[replay] SUCCESS: steps=12, return=38.00
 [replay] Results appended to vi_experiments.csv
-[VI Run 4/9] wind_slip=.05, max_battery=12, seed=4
-[replay] VI converged in 82 sweeps; last delta=8.42339033901851e-05
-[replay] Done. steps=12, return=38.00, delivered=True
+[VI Run 4/9] wind_slip=.07, max_battery=35, seed=4
+[replay] VI converged in 60 sweeps; last delta=4.4198602766609696e-05
+
+============================================================
+LEARNED POLICY SUMMARY
+============================================================
+Total states: 3528
+
+Action distribution across all states:
+  UP      :  673 states ( 19.1%)
+  DOWN    : 1308 states ( 37.1%)
+  LEFT    :  603 states ( 17.1%)
+  RIGHT   :  880 states ( 24.9%)
+  STAY    :   35 states (  1.0%)
+  CHARGE  :   29 states (  0.8%)
+
+Initial state policy:
+  State: pos=(0,0), battery=35, has_package=True
+  Action: DOWN
+  State value V(s): 15.42
+============================================================
+
+[replay] SUCCESS: steps=23, return=-73.00
 [replay] Results appended to vi_experiments.csv
-[VI Run 5/9] wind_slip=.19, max_battery=9, seed=5
-[replay] VI converged in 29 sweeps; last delta=0.0
-[replay] Done. steps=9, return=-19.00, delivered=False
+[VI Run 5/9] wind_slip=.16, max_battery=27, seed=5
+[replay] VI converged in 67 sweeps; last delta=1.4395876846151623e-05
+
+============================================================
+LEARNED POLICY SUMMARY
+============================================================
+Total states: 2744
+
+Action distribution across all states:
+  UP      :  553 states ( 20.2%)
+  DOWN    : 1055 states ( 38.4%)
+  LEFT    :  414 states ( 15.1%)
+  RIGHT   :  665 states ( 24.2%)
+  STAY    :   27 states (  1.0%)
+  CHARGE  :   30 states (  1.1%)
+
+Initial state policy:
+  State: pos=(0,0), battery=27, has_package=True
+  Action: DOWN
+  State value V(s): -22.39
+============================================================
+
+[replay] SUCCESS: steps=12, return=38.00
 [replay] Results appended to vi_experiments.csv
-[VI Run 6/9] wind_slip=.13, max_battery=13, seed=6
-[replay] VI converged in 52 sweeps; last delta=9.770202560233088e-05
-[replay] Done. steps=13, return=-23.00, delivered=False
+[VI Run 6/9] wind_slip=.11, max_battery=23, seed=6
+[replay] VI converged in 64 sweeps; last delta=9.32051274364909e-05
+
+============================================================
+LEARNED POLICY SUMMARY
+============================================================
+Total states: 2352
+
+Action distribution across all states:
+  UP      :  503 states ( 21.4%)
+  DOWN    :  844 states ( 35.9%)
+  LEFT    :  390 states ( 16.6%)
+  RIGHT   :  556 states ( 23.6%)
+  STAY    :   23 states (  1.0%)
+  CHARGE  :   36 states (  1.5%)
+
+Initial state policy:
+  State: pos=(0,0), battery=23, has_package=True
+  Action: DOWN
+  State value V(s): 0.80
+============================================================
+
+[replay] SUCCESS: steps=13, return=17.00
 [replay] Results appended to vi_experiments.csv
-[VI Run 7/9] wind_slip=.17, max_battery=10, seed=7
-[replay] VI converged in 29 sweeps; last delta=0.0
-[replay] Done. steps=10, return=-20.00, delivered=False
+[VI Run 7/9] wind_slip=.08, max_battery=30, seed=7
+[replay] VI converged in 61 sweeps; last delta=9.647912973731465e-05
+
+============================================================
+LEARNED POLICY SUMMARY
+============================================================
+Total states: 3038
+
+Action distribution across all states:
+  UP      :  602 states ( 19.8%)
+  DOWN    : 1108 states ( 36.5%)
+  LEFT    :  521 states ( 17.1%)
+  RIGHT   :  746 states ( 24.6%)
+  STAY    :   30 states (  1.0%)
+  CHARGE  :   31 states (  1.0%)
+
+Initial state policy:
+  State: pos=(0,0), battery=30, has_package=True
+  Action: DOWN
+  State value V(s): 12.22
+============================================================
+
+[replay] SUCCESS: steps=16, return=34.00
 [replay] Results appended to vi_experiments.csv
-[VI Run 8/9] wind_slip=.36, max_battery=6, seed=8
-[replay] VI converged in 39 sweeps; last delta=0.0
-[replay] Done. steps=6, return=-36.00, delivered=False
+[VI Run 8/9] wind_slip=.19, max_battery=36, seed=8
+[replay] VI converged in 105 sweeps; last delta=2.4229507289419416e-10
+
+============================================================
+LEARNED POLICY SUMMARY
+============================================================
+Total states: 3626
+
+Action distribution across all states:
+  UP      :  708 states ( 19.5%)
+  DOWN    : 1442 states ( 39.8%)
+  LEFT    :  541 states ( 14.9%)
+  RIGHT   :  879 states ( 24.2%)
+  STAY    :   36 states (  1.0%)
+  CHARGE  :   20 states (  0.6%)
+
+Initial state policy:
+  State: pos=(0,0), battery=36, has_package=True
+  Action: DOWN
+  State value V(s): -37.63
+============================================================
+
+[replay] SUCCESS: steps=18, return=32.00
 [replay] Results appended to vi_experiments.csv
-[VI Run 9/9] wind_slip=.22, max_battery=11, seed=9
-[replay] VI converged in 33 sweeps; last delta=0.0
-[replay] Done. steps=11, return=-41.00, delivered=False
+[VI Run 9/9] wind_slip=.12, max_battery=29, seed=9
+[replay] VI converged in 60 sweeps; last delta=7.25785968267445e-05
+
+============================================================
+LEARNED POLICY SUMMARY
+============================================================
+Total states: 2940
+
+Action distribution across all states:
+  UP      :  590 states ( 20.1%)
+  DOWN    : 1097 states ( 37.3%)
+  LEFT    :  486 states ( 16.5%)
+  RIGHT   :  703 states ( 23.9%)
+  STAY    :   29 states (  1.0%)
+  CHARGE  :   35 states (  1.2%)
+
+Initial state policy:
+  State: pos=(0,0), battery=29, has_package=True
+  Action: DOWN
+  State value V(s): -2.59
+============================================================
+
+[replay] SUCCESS: steps=28, return=-58.00
 [replay] Results appended to vi_experiments.csv
 
 --- Running Monte Carlo (MC) Experiments: On-Policy ---
-[MC On-Policy] wind_slip=0.00, epsilon=0.10, episodes=10, seed=0
-[replay] Starting MC training for 10 episodes... (off_policy=False)
-[replay] MC training complete. Stats over last 100 episodes: Avg=-141.70, Var=8994.41, Std=94.84
-[replay][eval] N=100 success_rate=0.000 avg_return=-62.00 avg_steps=12.0 avg_collisions=2.00
-[replay] Done. steps=12, return=-62.00, delivered=False
+[MC On-Policy] wind_slip=0.00, epsilon=0.10, episodes=5000, seed=0
+[replay] Starting MC training for 5000 episodes... (off_policy=False)
+[MC] Starting training (updates every 100 episodes)
+[MC] Episode 100/5000 | Avg return (last 100): -257.93
+[MC] Episode 200/5000 | Avg return (last 100): -150.76
+[MC] Episode 300/5000 | Avg return (last 100): -109.54
+[MC] Episode 400/5000 | Avg return (last 100): -102.61
+[MC] Episode 500/5000 | Avg return (last 100): -81.99
+[MC] Episode 600/5000 | Avg return (last 100): -78.65
+[MC] Episode 700/5000 | Avg return (last 100): -78.98
+[MC] Episode 800/5000 | Avg return (last 100): -65.77
+[MC] Episode 900/5000 | Avg return (last 100): -62.03
+[MC] Episode 1000/5000 | Avg return (last 100): -66.14
+[MC] Episode 1100/5000 | Avg return (last 100): -67.35
+[MC] Episode 1200/5000 | Avg return (last 100): -62.56
+[MC] Episode 1300/5000 | Avg return (last 100): -57.41
+[MC] Episode 1400/5000 | Avg return (last 100): -58.14
+[MC] Episode 1500/5000 | Avg return (last 100): -57.32
+[MC] Episode 1600/5000 | Avg return (last 100): -57.39
+[MC] Episode 1700/5000 | Avg return (last 100): -59.55
+[MC] Episode 1800/5000 | Avg return (last 100): -59.83
+[MC] Episode 1900/5000 | Avg return (last 100): -56.04
+[MC] Episode 2000/5000 | Avg return (last 100): -53.41
+[MC] Episode 2100/5000 | Avg return (last 100): -54.46
+[MC] Episode 2200/5000 | Avg return (last 100): -60.44
+[MC] Episode 2300/5000 | Avg return (last 100): -53.97
+[MC] Episode 2400/5000 | Avg return (last 100): -58.49
+[MC] Episode 2500/5000 | Avg return (last 100): -51.92
+[MC] Episode 2600/5000 | Avg return (last 100): -56.75
+[MC] Episode 2700/5000 | Avg return (last 100): -52.60
+[MC] Episode 2800/5000 | Avg return (last 100): -54.01
+[MC] Episode 2900/5000 | Avg return (last 100): -52.27
+[MC] Episode 3000/5000 | Avg return (last 100): -55.48
+[MC] Episode 3100/5000 | Avg return (last 100): -52.19
+[MC] Episode 3200/5000 | Avg return (last 100): -52.76
+[MC] Episode 3300/5000 | Avg return (last 100): -53.80
+[MC] Episode 3400/5000 | Avg return (last 100): -49.54
+[MC] Episode 3500/5000 | Avg return (last 100): -52.55
+[MC] Episode 3600/5000 | Avg return (last 100): -52.32
+[MC] Episode 3700/5000 | Avg return (last 100): -54.83
+[MC] Episode 3800/5000 | Avg return (last 100): -52.53
+[MC] Episode 3900/5000 | Avg return (last 100): -52.07
+[MC] Episode 4000/5000 | Avg return (last 100): -53.34
+[MC] Episode 4100/5000 | Avg return (last 100): -52.20
+[MC] Episode 4200/5000 | Avg return (last 100): -53.25
+[MC] Episode 4300/5000 | Avg return (last 100): -51.53
+[MC] Episode 4400/5000 | Avg return (last 100): -55.12
+[MC] Episode 4500/5000 | Avg return (last 100): -52.73
+[MC] Episode 4600/5000 | Avg return (last 100): -52.38
+[MC] Episode 4700/5000 | Avg return (last 100): -49.49
+[MC] Episode 4800/5000 | Avg return (last 100): -50.86
+[MC] Episode 4900/5000 | Avg return (last 100): -51.47
+[MC] Episode 5000/5000 | Avg return (last 100): -51.49
+[replay] MC training complete. Stats over last 100 episodes: Avg=-51.49, Var=250.31, Std=15.82
+
+============================================================
+LEARNED POLICY SUMMARY
+============================================================
+Total states: 3038
+
+Action distribution across all states:
+  UP      : 2559 states ( 84.2%)
+  DOWN    :  175 states (  5.8%)
+  LEFT    :  104 states (  3.4%)
+  RIGHT   :  118 states (  3.9%)
+  STAY    :   54 states (  1.8%)
+  CHARGE  :   28 states (  0.9%)
+
+Initial state policy:
+  State: pos=(0,0), battery=30, has_package=True
+  Action: RIGHT
+  Q-values: [-78.78487959 -74.75830988 -98.10624275 -46.24658719 -69.23319624
+ -73.00857316]
+  Best Q-value: -46.25
+============================================================
+
+[replay][eval] N=100 success_rate=0.000 avg_return=-40.00 avg_steps=30.0 avg_collisions=0.00
+[replay] FAILED: steps=30, return=-40.00
 [replay] Results appended to mc_experiments.csv
-[MC On-Policy] wind_slip=0.00, epsilon=0.10, episodes=10, seed=1
-[replay] Starting MC training for 10 episodes... (off_policy=False)
-[replay] MC training complete. Stats over last 100 episodes: Avg=-108.20, Var=9816.96, Std=99.08
-[replay][eval] N=100 success_rate=0.000 avg_return=-200.00 avg_steps=200.0 avg_collisions=0.00
-[replay] Done. steps=200, return=-200.00, delivered=False
+[MC On-Policy] wind_slip=0.00, epsilon=0.10, episodes=5000, seed=1
+[replay] Starting MC training for 5000 episodes... (off_policy=False)
+[MC] Starting training (updates every 100 episodes)
+[MC] Episode 100/5000 | Avg return (last 100): -266.36
+[MC] Episode 200/5000 | Avg return (last 100): -121.40
+[MC] Episode 300/5000 | Avg return (last 100): -83.46
+[MC] Episode 400/5000 | Avg return (last 100): -74.21
+[MC] Episode 500/5000 | Avg return (last 100): -68.33
+[MC] Episode 600/5000 | Avg return (last 100): -64.74
+[MC] Episode 700/5000 | Avg return (last 100): -66.11
+[MC] Episode 800/5000 | Avg return (last 100): -68.32
+[MC] Episode 900/5000 | Avg return (last 100): -58.67
+[MC] Episode 1000/5000 | Avg return (last 100): -57.08
+[MC] Episode 1100/5000 | Avg return (last 100): -60.98
+[MC] Episode 1200/5000 | Avg return (last 100): -63.08
+[MC] Episode 1300/5000 | Avg return (last 100): -67.95
+[MC] Episode 1400/5000 | Avg return (last 100): -63.55
+[MC] Episode 1500/5000 | Avg return (last 100): -54.04
+[MC] Episode 1600/5000 | Avg return (last 100): -59.69
+[MC] Episode 1700/5000 | Avg return (last 100): -57.14
+[MC] Episode 1800/5000 | Avg return (last 100): -56.17
+[MC] Episode 1900/5000 | Avg return (last 100): -55.50
+[MC] Episode 2000/5000 | Avg return (last 100): -56.45
+[MC] Episode 2100/5000 | Avg return (last 100): -55.06
+[MC] Episode 2200/5000 | Avg return (last 100): -51.82
+[MC] Episode 2300/5000 | Avg return (last 100): -52.80
+[MC] Episode 2400/5000 | Avg return (last 100): -53.55
+[MC] Episode 2500/5000 | Avg return (last 100): -54.74
+[MC] Episode 2600/5000 | Avg return (last 100): -54.34
+[MC] Episode 2700/5000 | Avg return (last 100): -51.71
+[MC] Episode 2800/5000 | Avg return (last 100): -54.13
+[MC] Episode 2900/5000 | Avg return (last 100): -52.89
+[MC] Episode 3000/5000 | Avg return (last 100): -52.33
+[MC] Episode 3100/5000 | Avg return (last 100): -53.03
+[MC] Episode 3200/5000 | Avg return (last 100): -51.75
+[MC] Episode 3300/5000 | Avg return (last 100): -49.59
+[MC] Episode 3400/5000 | Avg return (last 100): -53.18
+[MC] Episode 3500/5000 | Avg return (last 100): -50.24
+[MC] Episode 3600/5000 | Avg return (last 100): -53.06
+[MC] Episode 3700/5000 | Avg return (last 100): -52.14
+[MC] Episode 3800/5000 | Avg return (last 100): -51.47
+[MC] Episode 3900/5000 | Avg return (last 100): -54.28
+[MC] Episode 4000/5000 | Avg return (last 100): -49.35
+[MC] Episode 4100/5000 | Avg return (last 100): -54.26
+[MC] Episode 4200/5000 | Avg return (last 100): -49.94
+[MC] Episode 4300/5000 | Avg return (last 100): -52.61
+[MC] Episode 4400/5000 | Avg return (last 100): -50.43
+[MC] Episode 4500/5000 | Avg return (last 100): -55.85
+[MC] Episode 4600/5000 | Avg return (last 100): -52.72
+[MC] Episode 4700/5000 | Avg return (last 100): -51.39
+[MC] Episode 4800/5000 | Avg return (last 100): -52.21
+[MC] Episode 4900/5000 | Avg return (last 100): -49.82
+[MC] Episode 5000/5000 | Avg return (last 100): -55.49
+[replay] MC training complete. Stats over last 100 episodes: Avg=-55.49, Var=411.81, Std=20.29
+
+============================================================
+LEARNED POLICY SUMMARY
+============================================================
+Total states: 3038
+
+Action distribution across all states:
+  UP      : 2514 states ( 82.8%)
+  DOWN    :  182 states (  6.0%)
+  LEFT    :  115 states (  3.8%)
+  RIGHT   :  119 states (  3.9%)
+  STAY    :   59 states (  1.9%)
+  CHARGE  :   49 states (  1.6%)
+
+Initial state policy:
+  State: pos=(0,0), battery=30, has_package=True
+  Action: DOWN
+  Q-values: [-78.82270859 -47.10826889 -81.12071023 -53.31248241 -57.68824818
+ -61.7133443 ]
+  Best Q-value: -47.11
+============================================================
+
+[replay][eval] N=100 success_rate=0.000 avg_return=-40.00 avg_steps=30.0 avg_collisions=0.00
+[replay] FAILED: steps=30, return=-40.00
 [replay] Results appended to mc_experiments.csv
-[MC On-Policy] wind_slip=0.00, epsilon=0.10, episodes=10, seed=2
-[replay] Starting MC training for 10 episodes... (off_policy=False)
-[replay] MC training complete. Stats over last 100 episodes: Avg=-107.00, Var=4546.60, Std=67.43
-[replay][eval] N=100 success_rate=0.000 avg_return=-220.00 avg_steps=200.0 avg_collisions=1.00
-[replay] Done. steps=200, return=-220.00, delivered=False
+[MC On-Policy] wind_slip=0.10, epsilon=0.10, episodes=5000, seed=0
+[replay] Starting MC training for 5000 episodes... (off_policy=False)
+[MC] Starting training (updates every 100 episodes)
+[MC] Episode 100/5000 | Avg return (last 100): -270.38
+[MC] Episode 200/5000 | Avg return (last 100): -242.69
+[MC] Episode 300/5000 | Avg return (last 100): -198.02
+[MC] Episode 400/5000 | Avg return (last 100): -162.49
+[MC] Episode 500/5000 | Avg return (last 100): -149.89
+[MC] Episode 600/5000 | Avg return (last 100): -135.25
+[MC] Episode 700/5000 | Avg return (last 100): -131.53
+[MC] Episode 800/5000 | Avg return (last 100): -130.88
+[MC] Episode 900/5000 | Avg return (last 100): -124.42
+[MC] Episode 1000/5000 | Avg return (last 100): -122.42
+[MC] Episode 1100/5000 | Avg return (last 100): -121.77
+[MC] Episode 1200/5000 | Avg return (last 100): -126.81
+[MC] Episode 1300/5000 | Avg return (last 100): -106.46
+[MC] Episode 1400/5000 | Avg return (last 100): -98.38
+[MC] Episode 1500/5000 | Avg return (last 100): -106.99
+[MC] Episode 1600/5000 | Avg return (last 100): -107.38
+[MC] Episode 1700/5000 | Avg return (last 100): -101.00
+[MC] Episode 1800/5000 | Avg return (last 100): -102.81
+[MC] Episode 1900/5000 | Avg return (last 100): -112.65
+[MC] Episode 2000/5000 | Avg return (last 100): -108.15
+[MC] Episode 2100/5000 | Avg return (last 100): -101.27
+[MC] Episode 2200/5000 | Avg return (last 100): -101.74
+[MC] Episode 2300/5000 | Avg return (last 100): -107.49
+[MC] Episode 2400/5000 | Avg return (last 100): -104.56
+[MC] Episode 2500/5000 | Avg return (last 100): -107.07
+[MC] Episode 2600/5000 | Avg return (last 100): -105.84
+[MC] Episode 2700/5000 | Avg return (last 100): -96.80
+[MC] Episode 2800/5000 | Avg return (last 100): -96.02
+[MC] Episode 2900/5000 | Avg return (last 100): -108.86
+[MC] Episode 3000/5000 | Avg return (last 100): -104.05
+[MC] Episode 3100/5000 | Avg return (last 100): -95.74
+[MC] Episode 3200/5000 | Avg return (last 100): -99.79
+[MC] Episode 3300/5000 | Avg return (last 100): -102.53
+[MC] Episode 3400/5000 | Avg return (last 100): -98.16
+[MC] Episode 3500/5000 | Avg return (last 100): -107.25
+[MC] Episode 3600/5000 | Avg return (last 100): -94.42
+[MC] Episode 3700/5000 | Avg return (last 100): -93.59
+[MC] Episode 3800/5000 | Avg return (last 100): -91.45
+[MC] Episode 3900/5000 | Avg return (last 100): -84.99
+[MC] Episode 4000/5000 | Avg return (last 100): -89.14
+[MC] Episode 4100/5000 | Avg return (last 100): -90.59
+[MC] Episode 4200/5000 | Avg return (last 100): -91.20
+[MC] Episode 4300/5000 | Avg return (last 100): -81.15
+[MC] Episode 4400/5000 | Avg return (last 100): -88.78
+[MC] Episode 4500/5000 | Avg return (last 100): -85.04
+[MC] Episode 4600/5000 | Avg return (last 100): -83.15
+[MC] Episode 4700/5000 | Avg return (last 100): -81.63
+[MC] Episode 4800/5000 | Avg return (last 100): -85.30
+[MC] Episode 4900/5000 | Avg return (last 100): -77.90
+[MC] Episode 5000/5000 | Avg return (last 100): -79.70
+[replay] MC training complete. Stats over last 100 episodes: Avg=-79.70, Var=1003.55, Std=31.68
+
+============================================================
+LEARNED POLICY SUMMARY
+============================================================
+Total states: 3038
+
+Action distribution across all states:
+  UP      : 2373 states ( 78.1%)
+  DOWN    :  197 states (  6.5%)
+  LEFT    :  178 states (  5.9%)
+  RIGHT   :  159 states (  5.2%)
+  STAY    :   67 states (  2.2%)
+  CHARGE  :   64 states (  2.1%)
+
+Initial state policy:
+  State: pos=(0,0), battery=30, has_package=True
+  Action: DOWN
+  Q-values: [-103.05745486  -80.26992107  -98.74426654  -97.66850986  -85.63108392
+  -81.73178437]
+  Best Q-value: -80.27
+============================================================
+
+[replay][eval] N=100 success_rate=0.000 avg_return=-122.03 avg_steps=101.4 avg_collisions=0.74
+[replay] FAILED: steps=200, return=-200.00
 [replay] Results appended to mc_experiments.csv
-[MC On-Policy] wind_slip=0.05, epsilon=0.10, episodes=10, seed=0
-[replay] Starting MC training for 10 episodes... (off_policy=False)
-[replay] MC training complete. Stats over last 100 episodes: Avg=-117.60, Var=7009.64, Std=83.72
-[replay][eval] N=100 success_rate=0.000 avg_return=-49.02 avg_steps=28.9 avg_collisions=0.55
-[replay] Done. steps=12, return=-62.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC On-Policy] wind_slip=0.05, epsilon=0.10, episodes=10, seed=1
-[replay] Starting MC training for 10 episodes... (off_policy=False)
-[replay] MC training complete. Stats over last 100 episodes: Avg=-128.00, Var=4597.20, Std=67.80
-[replay][eval] N=100 success_rate=0.000 avg_return=-200.00 avg_steps=200.0 avg_collisions=0.00
-[replay] Done. steps=200, return=-200.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC On-Policy] wind_slip=0.05, epsilon=0.10, episodes=10, seed=2
-[replay] Starting MC training for 10 episodes... (off_policy=False)
-[replay] MC training complete. Stats over last 100 episodes: Avg=-116.80, Var=3667.16, Std=60.56
-[replay][eval] N=100 success_rate=0.000 avg_return=-185.26 avg_steps=175.6 avg_collisions=0.42
-[replay] Done. steps=200, return=-200.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC On-Policy] wind_slip=0.10, epsilon=0.10, episodes=10, seed=0
-[replay] Starting MC training for 10 episodes... (off_policy=False)
-[replay] MC training complete. Stats over last 100 episodes: Avg=-103.20, Var=2483.56, Std=49.84
-[replay][eval] N=100 success_rate=0.000 avg_return=-78.14 avg_steps=36.4 avg_collisions=1.65
-[replay] Done. steps=200, return=-200.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC On-Policy] wind_slip=0.10, epsilon=0.10, episodes=10, seed=1
-[replay] Starting MC training for 10 episodes... (off_policy=False)
-[replay] MC training complete. Stats over last 100 episodes: Avg=-113.20, Var=2434.96, Std=49.35
-[replay][eval] N=100 success_rate=0.000 avg_return=-200.00 avg_steps=200.0 avg_collisions=0.00
-[replay] Done. steps=200, return=-200.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC On-Policy] wind_slip=0.10, epsilon=0.10, episodes=10, seed=2
-[replay] Starting MC training for 10 episodes... (off_policy=False)
-[replay] MC training complete. Stats over last 100 episodes: Avg=-129.00, Var=3095.60, Std=55.64
-[replay][eval] N=100 success_rate=0.000 avg_return=-200.00 avg_steps=200.0 avg_collisions=0.00
-[replay] Done. steps=200, return=-200.00, delivered=False
+[MC On-Policy] wind_slip=0.10, epsilon=0.10, episodes=5000, seed=1
+[replay] Starting MC training for 5000 episodes... (off_policy=False)
+[MC] Starting training (updates every 100 episodes)
+[MC] Episode 100/5000 | Avg return (last 100): -254.73
+[MC] Episode 200/5000 | Avg return (last 100): -245.13
+[MC] Episode 300/5000 | Avg return (last 100): -171.52
+[MC] Episode 400/5000 | Avg return (last 100): -134.93
+[MC] Episode 500/5000 | Avg return (last 100): -122.86
+[MC] Episode 600/5000 | Avg return (last 100): -108.91
+[MC] Episode 700/5000 | Avg return (last 100): -102.08
+[MC] Episode 800/5000 | Avg return (last 100): -102.52
+[MC] Episode 900/5000 | Avg return (last 100): -101.94
+[MC] Episode 1000/5000 | Avg return (last 100): -103.29
+[MC] Episode 1100/5000 | Avg return (last 100): -83.64
+[MC] Episode 1200/5000 | Avg return (last 100): -100.77
+[MC] Episode 1300/5000 | Avg return (last 100): -92.34
+[MC] Episode 1400/5000 | Avg return (last 100): -92.89
+[MC] Episode 1500/5000 | Avg return (last 100): -87.94
+[MC] Episode 1600/5000 | Avg return (last 100): -86.03
+[MC] Episode 1700/5000 | Avg return (last 100): -92.82
+[MC] Episode 1800/5000 | Avg return (last 100): -82.37
+[MC] Episode 1900/5000 | Avg return (last 100): -85.43
+[MC] Episode 2000/5000 | Avg return (last 100): -80.00
+[MC] Episode 2100/5000 | Avg return (last 100): -81.70
+[MC] Episode 2200/5000 | Avg return (last 100): -82.06
+[MC] Episode 2300/5000 | Avg return (last 100): -78.11
+[MC] Episode 2400/5000 | Avg return (last 100): -81.02
+[MC] Episode 2500/5000 | Avg return (last 100): -80.66
+[MC] Episode 2600/5000 | Avg return (last 100): -76.07
+[MC] Episode 2700/5000 | Avg return (last 100): -75.64
+[MC] Episode 2800/5000 | Avg return (last 100): -75.29
+[MC] Episode 2900/5000 | Avg return (last 100): -73.01
+[MC] Episode 3000/5000 | Avg return (last 100): -78.52
+[MC] Episode 3100/5000 | Avg return (last 100): -82.44
+[MC] Episode 3200/5000 | Avg return (last 100): -77.97
+[MC] Episode 3300/5000 | Avg return (last 100): -79.55
+[MC] Episode 3400/5000 | Avg return (last 100): -83.34
+[MC] Episode 3500/5000 | Avg return (last 100): -78.90
+[MC] Episode 3600/5000 | Avg return (last 100): -87.65
+[MC] Episode 3700/5000 | Avg return (last 100): -81.44
+[MC] Episode 3800/5000 | Avg return (last 100): -74.40
+[MC] Episode 3900/5000 | Avg return (last 100): -73.54
+[MC] Episode 4000/5000 | Avg return (last 100): -77.65
+[MC] Episode 4100/5000 | Avg return (last 100): -76.13
+[MC] Episode 4200/5000 | Avg return (last 100): -78.25
+[MC] Episode 4300/5000 | Avg return (last 100): -73.48
+[MC] Episode 4400/5000 | Avg return (last 100): -76.68
+[MC] Episode 4500/5000 | Avg return (last 100): -81.89
+[MC] Episode 4600/5000 | Avg return (last 100): -78.94
+[MC] Episode 4700/5000 | Avg return (last 100): -80.77
+[MC] Episode 4800/5000 | Avg return (last 100): -78.70
+[MC] Episode 4900/5000 | Avg return (last 100): -71.95
+[MC] Episode 5000/5000 | Avg return (last 100): -77.32
+[replay] MC training complete. Stats over last 100 episodes: Avg=-77.32, Var=862.76, Std=29.37
+
+============================================================
+LEARNED POLICY SUMMARY
+============================================================
+Total states: 3038
+
+Action distribution across all states:
+  UP      : 2420 states ( 79.7%)
+  DOWN    :  199 states (  6.6%)
+  LEFT    :  159 states (  5.2%)
+  RIGHT   :  144 states (  4.7%)
+  STAY    :   57 states (  1.9%)
+  CHARGE  :   59 states (  1.9%)
+
+Initial state policy:
+  State: pos=(0,0), battery=30, has_package=True
+  Action: RIGHT
+  Q-values: [-94.61707862 -73.89558602 -94.37944276 -67.39485622 -75.4642326
+ -75.73836077]
+  Best Q-value: -67.39
+============================================================
+
+[replay][eval] N=100 success_rate=0.000 avg_return=-139.07 avg_steps=123.8 avg_collisions=0.54
+[replay] FAILED: steps=200, return=-200.00
 [replay] Results appended to mc_experiments.csv
 
 --- Running Monte Carlo (MC) Experiments: Off-Policy (Weighted IS, epsilon behavior) ---
-[MC Off-Policy] wind_slip=0.00, behavior=epsilon, behavior_epsilon=0.10, episodes=10, seed=0
-[replay] Starting MC training for 10 episodes... (off_policy=True)
-[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.9045, samples=199; expected_greedy_fraction≈0.9167 for epsilon=0.100, nA=6
-[replay] MC training complete. Stats over last 100 episodes: Avg=-257.90, Var=1282.69, Std=35.81
-[replay][eval] N=100 success_rate=0.000 avg_return=-420.00 avg_steps=200.0 avg_collisions=11.00
-[replay] Done. steps=200, return=-420.00, delivered=False
+[MC Off-Policy] wind_slip=0.00, behavior=epsilon, behavior_epsilon=0.20, episodes=5000, seed=0
+[replay] Starting MC training for 5000 episodes... (off_policy=True)
+[MC Off-Policy] Starting training (updates every 100 episodes)
+[MC Off-Policy] Episode 100/5000 | Avg return (last 100): -597.44
+[MC Off-Policy] Episode 200/5000 | Avg return (last 100): -590.71
+[MC Off-Policy] Episode 300/5000 | Avg return (last 100): -599.49
+[MC Off-Policy] Episode 400/5000 | Avg return (last 100): -596.24
+[MC Off-Policy] Episode 500/5000 | Avg return (last 100): -607.78
+[MC Off-Policy] Episode 600/5000 | Avg return (last 100): -598.12
+[MC Off-Policy] Episode 700/5000 | Avg return (last 100): -595.96
+[MC Off-Policy] Episode 800/5000 | Avg return (last 100): -605.69
+[MC Off-Policy] Episode 900/5000 | Avg return (last 100): -599.22
+[MC Off-Policy] Episode 1000/5000 | Avg return (last 100): -595.75
+[MC Off-Policy] Episode 1100/5000 | Avg return (last 100): -600.99
+[MC Off-Policy] Episode 1200/5000 | Avg return (last 100): -590.77
+[MC Off-Policy] Episode 1300/5000 | Avg return (last 100): -594.31
+[MC Off-Policy] Episode 1400/5000 | Avg return (last 100): -594.84
+[MC Off-Policy] Episode 1500/5000 | Avg return (last 100): -598.92
+[MC Off-Policy] Episode 1600/5000 | Avg return (last 100): -594.39
+[MC Off-Policy] Episode 1700/5000 | Avg return (last 100): -599.48
+[MC Off-Policy] Episode 1800/5000 | Avg return (last 100): -587.01
+[MC Off-Policy] Episode 1900/5000 | Avg return (last 100): -609.68
+[MC Off-Policy] Episode 2000/5000 | Avg return (last 100): -598.90
+[MC Off-Policy] Episode 2100/5000 | Avg return (last 100): -610.61
+[MC Off-Policy] Episode 2200/5000 | Avg return (last 100): -594.01
+[MC Off-Policy] Episode 2300/5000 | Avg return (last 100): -588.63
+[MC Off-Policy] Episode 2400/5000 | Avg return (last 100): -594.38
+[MC Off-Policy] Episode 2500/5000 | Avg return (last 100): -597.40
+[MC Off-Policy] Episode 2600/5000 | Avg return (last 100): -600.86
+[MC Off-Policy] Episode 2700/5000 | Avg return (last 100): -597.18
+[MC Off-Policy] Episode 2800/5000 | Avg return (last 100): -606.12
+[MC Off-Policy] Episode 2900/5000 | Avg return (last 100): -607.07
+[MC Off-Policy] Episode 3000/5000 | Avg return (last 100): -596.22
+[MC Off-Policy] Episode 3100/5000 | Avg return (last 100): -595.96
+[MC Off-Policy] Episode 3200/5000 | Avg return (last 100): -589.63
+[MC Off-Policy] Episode 3300/5000 | Avg return (last 100): -584.10
+[MC Off-Policy] Episode 3400/5000 | Avg return (last 100): -595.57
+[MC Off-Policy] Episode 3500/5000 | Avg return (last 100): -591.97
+[MC Off-Policy] Episode 3600/5000 | Avg return (last 100): -598.37
+[MC Off-Policy] Episode 3700/5000 | Avg return (last 100): -592.80
+[MC Off-Policy] Episode 3800/5000 | Avg return (last 100): -598.74
+[MC Off-Policy] Episode 3900/5000 | Avg return (last 100): -597.19
+[MC Off-Policy] Episode 4000/5000 | Avg return (last 100): -598.84
+[MC Off-Policy] Episode 4100/5000 | Avg return (last 100): -605.28
+[MC Off-Policy] Episode 4200/5000 | Avg return (last 100): -595.55
+[MC Off-Policy] Episode 4300/5000 | Avg return (last 100): -590.44
+[MC Off-Policy] Episode 4400/5000 | Avg return (last 100): -601.97
+[MC Off-Policy] Episode 4500/5000 | Avg return (last 100): -602.92
+[MC Off-Policy] Episode 4600/5000 | Avg return (last 100): -598.27
+[MC Off-Policy] Episode 4700/5000 | Avg return (last 100): -606.72
+[MC Off-Policy] Episode 4800/5000 | Avg return (last 100): -594.63
+[MC Off-Policy] Episode 4900/5000 | Avg return (last 100): -596.55
+[MC Off-Policy] Episode 5000/5000 | Avg return (last 100): -611.96
+[mc_off][debug] Behavior stats over first 200 episodes: greedy_fraction=0.8197, samples=7835; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-611.96, Var=5303.00, Std=72.82
+
+============================================================
+LEARNED POLICY SUMMARY
+============================================================
+Total states: 3038
+
+Action distribution across all states:
+  UP      : 3024 states ( 99.5%)
+  DOWN    :    3 states (  0.1%)
+  LEFT    :    1 states (  0.0%)
+  RIGHT   :    0 states (  0.0%)
+  STAY    :   10 states (  0.3%)
+  CHARGE  :    0 states (  0.0%)
+
+Initial state policy:
+  State: pos=(0,0), battery=30, has_package=True
+  Action: UP
+  Q-values: [0. 0. 0. 0. 0. 0.]
+  Best Q-value: 0.00
+============================================================
+
+[replay][eval] N=100 success_rate=0.000 avg_return=-780.00 avg_steps=200.0 avg_collisions=29.00
+[replay] FAILED: steps=200, return=-780.00
 [replay] Results appended to mc_experiments.csv
-[MC Off-Policy] wind_slip=0.00, behavior=epsilon, behavior_epsilon=0.20, episodes=10, seed=0
-[replay] Starting MC training for 10 episodes... (off_policy=True)
-[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8875, samples=160; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
-[replay] MC training complete. Stats over last 100 episodes: Avg=-264.00, Var=674.60, Std=25.97
-[replay][eval] N=100 success_rate=0.000 avg_return=-420.00 avg_steps=200.0 avg_collisions=11.00
-[replay] Done. steps=200, return=-420.00, delivered=False
+[MC Off-Policy] wind_slip=0.00, behavior=epsilon, behavior_epsilon=0.20, episodes=5000, seed=1
+[replay] Starting MC training for 5000 episodes... (off_policy=True)
+[MC Off-Policy] Starting training (updates every 100 episodes)
+[MC Off-Policy] Episode 100/5000 | Avg return (last 100): -598.52
+[MC Off-Policy] Episode 200/5000 | Avg return (last 100): -602.94
+[MC Off-Policy] Episode 300/5000 | Avg return (last 100): -595.87
+[MC Off-Policy] Episode 400/5000 | Avg return (last 100): -600.96
+[MC Off-Policy] Episode 500/5000 | Avg return (last 100): -610.54
+[MC Off-Policy] Episode 600/5000 | Avg return (last 100): -595.31
+[MC Off-Policy] Episode 700/5000 | Avg return (last 100): -587.87
+[MC Off-Policy] Episode 800/5000 | Avg return (last 100): -595.17
+[MC Off-Policy] Episode 900/5000 | Avg return (last 100): -591.94
+[MC Off-Policy] Episode 1000/5000 | Avg return (last 100): -610.00
+[MC Off-Policy] Episode 1100/5000 | Avg return (last 100): -603.42
+[MC Off-Policy] Episode 1200/5000 | Avg return (last 100): -600.18
+[MC Off-Policy] Episode 1300/5000 | Avg return (last 100): -599.53
+[MC Off-Policy] Episode 1400/5000 | Avg return (last 100): -593.66
+[MC Off-Policy] Episode 1500/5000 | Avg return (last 100): -597.31
+[MC Off-Policy] Episode 1600/5000 | Avg return (last 100): -613.45
+[MC Off-Policy] Episode 1700/5000 | Avg return (last 100): -595.72
+[MC Off-Policy] Episode 1800/5000 | Avg return (last 100): -604.55
+[MC Off-Policy] Episode 1900/5000 | Avg return (last 100): -603.39
+[MC Off-Policy] Episode 2000/5000 | Avg return (last 100): -600.84
+[MC Off-Policy] Episode 2100/5000 | Avg return (last 100): -598.61
+[MC Off-Policy] Episode 2200/5000 | Avg return (last 100): -590.70
+[MC Off-Policy] Episode 2300/5000 | Avg return (last 100): -604.41
+[MC Off-Policy] Episode 2400/5000 | Avg return (last 100): -600.43
+[MC Off-Policy] Episode 2500/5000 | Avg return (last 100): -587.44
+[MC Off-Policy] Episode 2600/5000 | Avg return (last 100): -592.95
+[MC Off-Policy] Episode 2700/5000 | Avg return (last 100): -594.79
+[MC Off-Policy] Episode 2800/5000 | Avg return (last 100): -607.64
+[MC Off-Policy] Episode 2900/5000 | Avg return (last 100): -597.73
+[MC Off-Policy] Episode 3000/5000 | Avg return (last 100): -596.57
+[MC Off-Policy] Episode 3100/5000 | Avg return (last 100): -603.19
+[MC Off-Policy] Episode 3200/5000 | Avg return (last 100): -605.88
+[MC Off-Policy] Episode 3300/5000 | Avg return (last 100): -605.57
+[MC Off-Policy] Episode 3400/5000 | Avg return (last 100): -602.72
+[MC Off-Policy] Episode 3500/5000 | Avg return (last 100): -596.94
+[MC Off-Policy] Episode 3600/5000 | Avg return (last 100): -614.64
+[MC Off-Policy] Episode 3700/5000 | Avg return (last 100): -590.10
+[MC Off-Policy] Episode 3800/5000 | Avg return (last 100): -599.05
+[MC Off-Policy] Episode 3900/5000 | Avg return (last 100): -594.89
+[MC Off-Policy] Episode 4000/5000 | Avg return (last 100): -592.97
+[MC Off-Policy] Episode 4100/5000 | Avg return (last 100): -594.35
+[MC Off-Policy] Episode 4200/5000 | Avg return (last 100): -600.84
+[MC Off-Policy] Episode 4300/5000 | Avg return (last 100): -593.59
+[MC Off-Policy] Episode 4400/5000 | Avg return (last 100): -590.85
+[MC Off-Policy] Episode 4500/5000 | Avg return (last 100): -607.65
+[MC Off-Policy] Episode 4600/5000 | Avg return (last 100): -589.40
+[MC Off-Policy] Episode 4700/5000 | Avg return (last 100): -588.81
+[MC Off-Policy] Episode 4800/5000 | Avg return (last 100): -602.04
+[MC Off-Policy] Episode 4900/5000 | Avg return (last 100): -609.27
+[MC Off-Policy] Episode 5000/5000 | Avg return (last 100): -606.81
+[mc_off][debug] Behavior stats over first 200 episodes: greedy_fraction=0.8329, samples=7886; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-606.81, Var=4401.49, Std=66.34
+
+============================================================
+LEARNED POLICY SUMMARY
+============================================================
+Total states: 3038
+
+Action distribution across all states:
+  UP      : 3023 states ( 99.5%)
+  DOWN    :    1 states (  0.0%)
+  LEFT    :    2 states (  0.1%)
+  RIGHT   :    1 states (  0.0%)
+  STAY    :   11 states (  0.4%)
+  CHARGE  :    0 states (  0.0%)
+
+Initial state policy:
+  State: pos=(0,0), battery=30, has_package=True
+  Action: UP
+  Q-values: [0. 0. 0. 0. 0. 0.]
+  Best Q-value: 0.00
+============================================================
+
+[replay][eval] N=100 success_rate=0.000 avg_return=-780.00 avg_steps=200.0 avg_collisions=29.00
+[replay] FAILED: steps=200, return=-780.00
 [replay] Results appended to mc_experiments.csv
-[MC Off-Policy] wind_slip=0.00, behavior=epsilon, behavior_epsilon=0.10, episodes=10, seed=1
-[replay] Starting MC training for 10 episodes... (off_policy=True)
-[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.9363, samples=204; expected_greedy_fraction≈0.9167 for epsilon=0.100, nA=6
-[replay] MC training complete. Stats over last 100 episodes: Avg=-264.40, Var=909.24, Std=30.15
-[replay][eval] N=100 success_rate=0.000 avg_return=-420.00 avg_steps=200.0 avg_collisions=11.00
-[replay] Done. steps=200, return=-420.00, delivered=False
+[MC Off-Policy] wind_slip=0.10, behavior=epsilon, behavior_epsilon=0.20, episodes=5000, seed=0
+[replay] Starting MC training for 5000 episodes... (off_policy=True)
+[MC Off-Policy] Starting training (updates every 100 episodes)
+[MC Off-Policy] Episode 100/5000 | Avg return (last 100): -506.54
+[MC Off-Policy] Episode 200/5000 | Avg return (last 100): -502.22
+[MC Off-Policy] Episode 300/5000 | Avg return (last 100): -509.45
+[MC Off-Policy] Episode 400/5000 | Avg return (last 100): -511.22
+[MC Off-Policy] Episode 500/5000 | Avg return (last 100): -515.67
+[MC Off-Policy] Episode 600/5000 | Avg return (last 100): -525.93
+[MC Off-Policy] Episode 700/5000 | Avg return (last 100): -508.31
+[MC Off-Policy] Episode 800/5000 | Avg return (last 100): -502.73
+[MC Off-Policy] Episode 900/5000 | Avg return (last 100): -511.58
+[MC Off-Policy] Episode 1000/5000 | Avg return (last 100): -516.88
+[MC Off-Policy] Episode 1100/5000 | Avg return (last 100): -498.34
+[MC Off-Policy] Episode 1200/5000 | Avg return (last 100): -502.74
+[MC Off-Policy] Episode 1300/5000 | Avg return (last 100): -496.17
+[MC Off-Policy] Episode 1400/5000 | Avg return (last 100): -496.78
+[MC Off-Policy] Episode 1500/5000 | Avg return (last 100): -510.60
+[MC Off-Policy] Episode 1600/5000 | Avg return (last 100): -513.20
+[MC Off-Policy] Episode 1700/5000 | Avg return (last 100): -509.88
+[MC Off-Policy] Episode 1800/5000 | Avg return (last 100): -499.94
+[MC Off-Policy] Episode 1900/5000 | Avg return (last 100): -504.43
+[MC Off-Policy] Episode 2000/5000 | Avg return (last 100): -520.54
+[MC Off-Policy] Episode 2100/5000 | Avg return (last 100): -504.53
+[MC Off-Policy] Episode 2200/5000 | Avg return (last 100): -506.94
+[MC Off-Policy] Episode 2300/5000 | Avg return (last 100): -498.10
+[MC Off-Policy] Episode 2400/5000 | Avg return (last 100): -507.92
+[MC Off-Policy] Episode 2500/5000 | Avg return (last 100): -508.71
+[MC Off-Policy] Episode 2600/5000 | Avg return (last 100): -512.59
+[MC Off-Policy] Episode 2700/5000 | Avg return (last 100): -507.37
+[MC Off-Policy] Episode 2800/5000 | Avg return (last 100): -511.50
+[MC Off-Policy] Episode 2900/5000 | Avg return (last 100): -513.30
+[MC Off-Policy] Episode 3000/5000 | Avg return (last 100): -504.49
+[MC Off-Policy] Episode 3100/5000 | Avg return (last 100): -502.01
+[MC Off-Policy] Episode 3200/5000 | Avg return (last 100): -505.18
+[MC Off-Policy] Episode 3300/5000 | Avg return (last 100): -499.23
+[MC Off-Policy] Episode 3400/5000 | Avg return (last 100): -510.06
+[MC Off-Policy] Episode 3500/5000 | Avg return (last 100): -511.78
+[MC Off-Policy] Episode 3600/5000 | Avg return (last 100): -505.95
+[MC Off-Policy] Episode 3700/5000 | Avg return (last 100): -500.52
+[MC Off-Policy] Episode 3800/5000 | Avg return (last 100): -509.37
+[MC Off-Policy] Episode 3900/5000 | Avg return (last 100): -526.60
+[MC Off-Policy] Episode 4000/5000 | Avg return (last 100): -513.98
+[MC Off-Policy] Episode 4100/5000 | Avg return (last 100): -504.50
+[MC Off-Policy] Episode 4200/5000 | Avg return (last 100): -516.33
+[MC Off-Policy] Episode 4300/5000 | Avg return (last 100): -499.69
+[MC Off-Policy] Episode 4400/5000 | Avg return (last 100): -508.32
+[MC Off-Policy] Episode 4500/5000 | Avg return (last 100): -517.82
+[MC Off-Policy] Episode 4600/5000 | Avg return (last 100): -506.67
+[MC Off-Policy] Episode 4700/5000 | Avg return (last 100): -509.24
+[MC Off-Policy] Episode 4800/5000 | Avg return (last 100): -522.44
+[MC Off-Policy] Episode 4900/5000 | Avg return (last 100): -497.68
+[MC Off-Policy] Episode 5000/5000 | Avg return (last 100): -502.42
+[mc_off][debug] Behavior stats over first 200 episodes: greedy_fraction=0.8208, samples=7636; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-502.42, Var=4665.00, Std=68.30
+
+============================================================
+LEARNED POLICY SUMMARY
+============================================================
+Total states: 3038
+
+Action distribution across all states:
+  UP      : 3021 states ( 99.4%)
+  DOWN    :    1 states (  0.0%)
+  LEFT    :    0 states (  0.0%)
+  RIGHT   :    0 states (  0.0%)
+  STAY    :   16 states (  0.5%)
+  CHARGE  :    0 states (  0.0%)
+
+Initial state policy:
+  State: pos=(0,0), battery=30, has_package=True
+  Action: UP
+  Q-values: [0. 0. 0. 0. 0. 0.]
+  Best Q-value: 0.00
+============================================================
+
+[replay][eval] N=100 success_rate=0.000 avg_return=-699.80 avg_steps=200.0 avg_collisions=24.99
+[replay] FAILED: steps=200, return=-680.00
 [replay] Results appended to mc_experiments.csv
-[MC Off-Policy] wind_slip=0.00, behavior=epsilon, behavior_epsilon=0.20, episodes=10, seed=1
-[replay] Starting MC training for 10 episodes... (off_policy=True)
-[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8151, samples=146; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
-[replay] MC training complete. Stats over last 100 episodes: Avg=-252.60, Var=1302.44, Std=36.09
-[replay][eval] N=100 success_rate=0.000 avg_return=-420.00 avg_steps=200.0 avg_collisions=11.00
-[replay] Done. steps=200, return=-420.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC Off-Policy] wind_slip=0.00, behavior=epsilon, behavior_epsilon=0.10, episodes=10, seed=2
-[replay] Starting MC training for 10 episodes... (off_policy=True)
-[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.9081, samples=185; expected_greedy_fraction≈0.9167 for epsilon=0.100, nA=6
-[replay] MC training complete. Stats over last 100 episodes: Avg=-264.50, Var=3848.65, Std=62.04
-[replay][eval] N=100 success_rate=0.000 avg_return=-420.00 avg_steps=200.0 avg_collisions=11.00
-[replay] Done. steps=200, return=-420.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC Off-Policy] wind_slip=0.00, behavior=epsilon, behavior_epsilon=0.20, episodes=10, seed=2
-[replay] Starting MC training for 10 episodes... (off_policy=True)
-[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8045, samples=133; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
-[replay] MC training complete. Stats over last 100 episodes: Avg=-227.30, Var=831.61, Std=28.84
-[replay][eval] N=100 success_rate=0.000 avg_return=-420.00 avg_steps=200.0 avg_collisions=11.00
-[replay] Done. steps=200, return=-420.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC Off-Policy] wind_slip=0.05, behavior=epsilon, behavior_epsilon=0.10, episodes=10, seed=0
-[replay] Starting MC training for 10 episodes... (off_policy=True)
-[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8954, samples=153; expected_greedy_fraction≈0.9167 for epsilon=0.100, nA=6
-[replay] MC training complete. Stats over last 100 episodes: Avg=-241.30, Var=3173.41, Std=56.33
-[replay][eval] N=100 success_rate=0.000 avg_return=-348.86 avg_steps=138.0 avg_collisions=10.38
-[replay] Done. steps=200, return=-380.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC Off-Policy] wind_slip=0.05, behavior=epsilon, behavior_epsilon=0.20, episodes=10, seed=0
-[replay] Starting MC training for 10 episodes... (off_policy=True)
-[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8806, samples=134; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
-[replay] MC training complete. Stats over last 100 episodes: Avg=-229.40, Var=1137.24, Std=33.72
-[replay][eval] N=100 success_rate=0.000 avg_return=-348.86 avg_steps=138.0 avg_collisions=10.38
-[replay] Done. steps=200, return=-380.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC Off-Policy] wind_slip=0.05, behavior=epsilon, behavior_epsilon=0.10, episodes=10, seed=1
-[replay] Starting MC training for 10 episodes... (off_policy=True)
-[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.9360, samples=172; expected_greedy_fraction≈0.9167 for epsilon=0.100, nA=6
-[replay] MC training complete. Stats over last 100 episodes: Avg=-243.20, Var=596.96, Std=24.43
-[replay][eval] N=100 success_rate=0.000 avg_return=-348.86 avg_steps=138.0 avg_collisions=10.38
-[replay] Done. steps=200, return=-420.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC Off-Policy] wind_slip=0.05, behavior=epsilon, behavior_epsilon=0.20, episodes=10, seed=1
-[replay] Starting MC training for 10 episodes... (off_policy=True)
-[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8219, samples=146; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
-[replay] MC training complete. Stats over last 100 episodes: Avg=-226.60, Var=880.44, Std=29.67
-[replay][eval] N=100 success_rate=0.000 avg_return=-348.86 avg_steps=138.0 avg_collisions=10.38
-[replay] Done. steps=200, return=-420.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC Off-Policy] wind_slip=0.05, behavior=epsilon, behavior_epsilon=0.10, episodes=10, seed=2
-[replay] Starting MC training for 10 episodes... (off_policy=True)
-[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8889, samples=126; expected_greedy_fraction≈0.9167 for epsilon=0.100, nA=6
-[replay] MC training complete. Stats over last 100 episodes: Avg=-226.60, Var=464.24, Std=21.55
-[replay][eval] N=100 success_rate=0.000 avg_return=-229.80 avg_steps=12.0 avg_collisions=10.39
-[replay] Done. steps=12, return=-242.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC Off-Policy] wind_slip=0.05, behavior=epsilon, behavior_epsilon=0.20, episodes=10, seed=2
-[replay] Starting MC training for 10 episodes... (off_policy=True)
-[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8015, samples=131; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
-[replay] MC training complete. Stats over last 100 episodes: Avg=-217.10, Var=1626.89, Std=40.33
-[replay][eval] N=100 success_rate=0.000 avg_return=-348.86 avg_steps=138.0 avg_collisions=10.38
-[replay] Done. steps=200, return=-420.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC Off-Policy] wind_slip=0.10, behavior=epsilon, behavior_epsilon=0.10, episodes=10, seed=0
-[replay] Starting MC training for 10 episodes... (off_policy=True)
-[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.9143, samples=140; expected_greedy_fraction≈0.9167 for epsilon=0.100, nA=6
-[replay] MC training complete. Stats over last 100 episodes: Avg=-214.00, Var=2979.40, Std=54.58
-[replay][eval] N=100 success_rate=0.000 avg_return=-301.80 avg_steps=106.0 avg_collisions=9.54
-[replay] Done. steps=12, return=-182.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC Off-Policy] wind_slip=0.10, behavior=epsilon, behavior_epsilon=0.20, episodes=10, seed=0
-[replay] Starting MC training for 10 episodes... (off_policy=True)
-[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8855, samples=131; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
-[replay] MC training complete. Stats over last 100 episodes: Avg=-199.10, Var=1626.29, Std=40.33
-[replay][eval] N=100 success_rate=0.000 avg_return=-284.88 avg_steps=79.7 avg_collisions=9.94
-[replay] Done. steps=200, return=-360.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC Off-Policy] wind_slip=0.10, behavior=epsilon, behavior_epsilon=0.10, episodes=10, seed=1
-[replay] Starting MC training for 10 episodes... (off_policy=True)
-[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.9360, samples=172; expected_greedy_fraction≈0.9167 for epsilon=0.100, nA=6
-[replay] MC training complete. Stats over last 100 episodes: Avg=-243.20, Var=733.76, Std=27.09
-[replay][eval] N=100 success_rate=0.000 avg_return=-367.88 avg_steps=173.7 avg_collisions=9.64
-[replay] Done. steps=200, return=-420.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC Off-Policy] wind_slip=0.10, behavior=epsilon, behavior_epsilon=0.20, episodes=10, seed=1
-[replay] Starting MC training for 10 episodes... (off_policy=True)
-[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8295, samples=129; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
-[replay] MC training complete. Stats over last 100 episodes: Avg=-216.90, Var=1235.89, Std=35.16
-[replay][eval] N=100 success_rate=0.000 avg_return=-216.00 avg_steps=12.0 avg_collisions=9.70
-[replay] Done. steps=12, return=-242.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC Off-Policy] wind_slip=0.10, behavior=epsilon, behavior_epsilon=0.10, episodes=10, seed=2
-[replay] Starting MC training for 10 episodes... (off_policy=True)
-[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8906, samples=128; expected_greedy_fraction≈0.9167 for epsilon=0.100, nA=6
-[replay] MC training complete. Stats over last 100 episodes: Avg=-212.80, Var=753.96, Std=27.46
-[replay][eval] N=100 success_rate=0.000 avg_return=-366.08 avg_steps=173.7 avg_collisions=9.55
-[replay] Done. steps=200, return=-420.00, delivered=False
-[replay] Results appended to mc_experiments.csv
-[MC Off-Policy] wind_slip=0.10, behavior=epsilon, behavior_epsilon=0.20, episodes=10, seed=2
-[replay] Starting MC training for 10 episodes... (off_policy=True)
-[mc_off][debug] Behavior stats over first 10 episodes: greedy_fraction=0.8120, samples=133; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
-[replay] MC training complete. Stats over last 100 episodes: Avg=-215.30, Var=1190.81, Std=34.51
-[replay][eval] N=100 success_rate=0.000 avg_return=-302.80 avg_steps=106.0 avg_collisions=9.59
-[replay] Done. steps=200, return=-420.00, delivered=False
+[MC Off-Policy] wind_slip=0.10, behavior=epsilon, behavior_epsilon=0.20, episodes=5000, seed=1
+[replay] Starting MC training for 5000 episodes... (off_policy=True)
+[MC Off-Policy] Starting training (updates every 100 episodes)
+[MC Off-Policy] Episode 100/5000 | Avg return (last 100): -496.04
+[MC Off-Policy] Episode 200/5000 | Avg return (last 100): -505.65
+[MC Off-Policy] Episode 300/5000 | Avg return (last 100): -511.10
+[MC Off-Policy] Episode 400/5000 | Avg return (last 100): -512.72
+[MC Off-Policy] Episode 500/5000 | Avg return (last 100): -509.71
+[MC Off-Policy] Episode 600/5000 | Avg return (last 100): -504.55
+[MC Off-Policy] Episode 700/5000 | Avg return (last 100): -502.44
+[MC Off-Policy] Episode 800/5000 | Avg return (last 100): -502.38
+[MC Off-Policy] Episode 900/5000 | Avg return (last 100): -510.63
+[MC Off-Policy] Episode 1000/5000 | Avg return (last 100): -518.64
+[MC Off-Policy] Episode 1100/5000 | Avg return (last 100): -501.07
+[MC Off-Policy] Episode 1200/5000 | Avg return (last 100): -510.55
+[MC Off-Policy] Episode 1300/5000 | Avg return (last 100): -500.45
+[MC Off-Policy] Episode 1400/5000 | Avg return (last 100): -509.80
+[MC Off-Policy] Episode 1500/5000 | Avg return (last 100): -503.36
+[MC Off-Policy] Episode 1600/5000 | Avg return (last 100): -507.37
+[MC Off-Policy] Episode 1700/5000 | Avg return (last 100): -511.58
+[MC Off-Policy] Episode 1800/5000 | Avg return (last 100): -495.82
+[MC Off-Policy] Episode 1900/5000 | Avg return (last 100): -510.41
+[MC Off-Policy] Episode 2000/5000 | Avg return (last 100): -509.41
+[MC Off-Policy] Episode 2100/5000 | Avg return (last 100): -506.32
+[MC Off-Policy] Episode 2200/5000 | Avg return (last 100): -495.57
+[MC Off-Policy] Episode 2300/5000 | Avg return (last 100): -497.89
+[MC Off-Policy] Episode 2400/5000 | Avg return (last 100): -500.71
+[MC Off-Policy] Episode 2500/5000 | Avg return (last 100): -514.59
+[MC Off-Policy] Episode 2600/5000 | Avg return (last 100): -493.38
+[MC Off-Policy] Episode 2700/5000 | Avg return (last 100): -507.39
+[MC Off-Policy] Episode 2800/5000 | Avg return (last 100): -504.83
+[MC Off-Policy] Episode 2900/5000 | Avg return (last 100): -486.69
+[MC Off-Policy] Episode 3000/5000 | Avg return (last 100): -507.22
+[MC Off-Policy] Episode 3100/5000 | Avg return (last 100): -503.78
+[MC Off-Policy] Episode 3200/5000 | Avg return (last 100): -511.20
+[MC Off-Policy] Episode 3300/5000 | Avg return (last 100): -499.61
+[MC Off-Policy] Episode 3400/5000 | Avg return (last 100): -509.90
+[MC Off-Policy] Episode 3500/5000 | Avg return (last 100): -520.34
+[MC Off-Policy] Episode 3600/5000 | Avg return (last 100): -505.67
+[MC Off-Policy] Episode 3700/5000 | Avg return (last 100): -509.74
+[MC Off-Policy] Episode 3800/5000 | Avg return (last 100): -510.27
+[MC Off-Policy] Episode 3900/5000 | Avg return (last 100): -506.68
+[MC Off-Policy] Episode 4000/5000 | Avg return (last 100): -494.68
+[MC Off-Policy] Episode 4100/5000 | Avg return (last 100): -497.96
+[MC Off-Policy] Episode 4200/5000 | Avg return (last 100): -494.96
+[MC Off-Policy] Episode 4300/5000 | Avg return (last 100): -506.47
+[MC Off-Policy] Episode 4400/5000 | Avg return (last 100): -498.36
+[MC Off-Policy] Episode 4500/5000 | Avg return (last 100): -509.37
+[MC Off-Policy] Episode 4600/5000 | Avg return (last 100): -515.26
+[MC Off-Policy] Episode 4700/5000 | Avg return (last 100): -506.49
+[MC Off-Policy] Episode 4800/5000 | Avg return (last 100): -503.41
+[MC Off-Policy] Episode 4900/5000 | Avg return (last 100): -516.07
+[MC Off-Policy] Episode 5000/5000 | Avg return (last 100): -519.68
+[mc_off][debug] Behavior stats over first 200 episodes: greedy_fraction=0.8329, samples=7629; expected_greedy_fraction≈0.8333 for epsilon=0.200, nA=6
+[replay] MC training complete. Stats over last 100 episodes: Avg=-519.68, Var=6409.14, Std=80.06
+
+============================================================
+LEARNED POLICY SUMMARY
+============================================================
+Total states: 3038
+
+Action distribution across all states:
+  UP      : 3019 states ( 99.4%)
+  DOWN    :    2 states (  0.1%)
+  LEFT    :    1 states (  0.0%)
+  RIGHT   :    1 states (  0.0%)
+  STAY    :   15 states (  0.5%)
+  CHARGE  :    0 states (  0.0%)
+
+Initial state policy:
+  State: pos=(0,0), battery=30, has_package=True
+  Action: UP
+  Q-values: [0. 0. 0. 0. 0. 0.]
+  Best Q-value: 0.00
+============================================================
+
+[replay][eval] N=100 success_rate=0.000 avg_return=-700.00 avg_steps=200.0 avg_collisions=25.00
+[replay] FAILED: steps=200, return=-720.00
 [replay] Results appended to mc_experiments.csv
 
 Experiment suite finished. Results are in vi_experiments.csv and mc_experiments.csv.
