@@ -509,20 +509,4 @@ print('MC avg return:', mc['replay_return'].mean())
 "
 ```
 
----
 
-## Further Reading
-
-- **Environment Details:** See `envs/drone_delivery.py`
-- **Algorithm Implementation:** See `algorithms/dp.py` and `algorithms/mc.py`
-- **Experiment Configuration:** See `run_experiments.sh`
-- **Project Overview:** See main `README.md`
-
----
-
-## Contact & Support
-
-For issues or questions about the examples, please check:
-1. This guide's troubleshooting section
-2. The main project README
-3. Code comments in the example scripts
