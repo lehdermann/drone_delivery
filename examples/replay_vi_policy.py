@@ -82,6 +82,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--eval-episodes", type=int, default=0, help="Greedy evaluation episodes after VI (no rendering)")
     # Replay
     p.add_argument("--sleep", type=float, default=0.1, help="Seconds to sleep between steps for visualization")
+    p.add_argument("--no-render", dest="no_render", action="store_true", help="Disable rendering (headless mode for faster execution)")
     return p.parse_args()
 
 
@@ -125,7 +126,8 @@ def main() -> None:
         (6, 3),  # Mid-right
     ]
 
-    # Build env with live rendering
+    # Build env with or without rendering based on --no-render flag
+    render_mode = None if args.no_render else "human"
     env = DroneDeliveryEnv(
         width=args.width,
         height=args.height,
@@ -134,7 +136,7 @@ def main() -> None:
         wind_slip=args.wind_slip,
         obstacles=obstacles,
         charging_stations=charging_stations,
-        render_mode="human",
+        render_mode=render_mode,
         seed=args.seed,
     )
 
@@ -214,9 +216,11 @@ def main() -> None:
         action_names = ['UP', 'DOWN', 'LEFT', 'RIGHT', 'STAY', 'CHARGE']
         trajectory = []
         
-        print("\n" + "="*60)
-        print("TRAJECTORY USING OPTIMAL POLICY")
-        print("="*60)
+        # Only print detailed trajectory if rendering is enabled
+        if not args.no_render:
+            print("\n" + "="*60)
+            print("TRAJECTORY USING OPTIMAL POLICY")
+            print("="*60)
         
         while not (done or truncated) and not interrupted:
             # Decode current state
@@ -232,32 +236,39 @@ def main() -> None:
                 'action': action_names[a]
             })
             
-            # Print step info (only first 10 and last 10 steps for brevity)
-            if steps < 10 or steps >= 190:
-                pkg_status = "📦" if has_pkg else "✓"
-                print(f"Step {steps:3d}: pos=({x},{y}) bat={battery:2d} {pkg_status} → {action_names[a]:6s}", end="")
-            elif steps == 10:
-                print("  ... (trajectory continues) ...")
+            # Print step info (only first 10 and last 10 steps for brevity, and only if rendering)
+            if not args.no_render:
+                if steps < 10 or steps >= 190:
+                    pkg_status = "📦" if has_pkg else "✓"
+                    print(f"Step {steps:3d}: pos=({x},{y}) bat={battery:2d} {pkg_status} → {action_names[a]:6s}", end="")
+                elif steps == 10:
+                    print("  ... (trajectory continues) ...")
             
             s, r, done, truncated, info = env.step(a)
             total_return += float(r)
             steps += 1
             
-            # Print reward for last step
-            if steps <= 10 or steps >= 190:
+            # Print reward for last step (only if rendering)
+            if not args.no_render and (steps <= 10 or steps >= 190):
                 print(f" → reward={r:6.1f}")
             
-            time.sleep(max(0.0, args.sleep))
+            # Only sleep if rendering
+            if not args.no_render:
+                time.sleep(max(0.0, args.sleep))
 
         delivered = bool(info.get("delivered", False))
         
-        # Final state
-        x, y, battery, has_pkg = env._decode(s)
-        print(f"Step {steps:3d}: pos=({x},{y}) bat={battery:2d} {'✓' if delivered else '✗'} → TERMINAL")
-        print("="*60)
-        print(f"RESULT: {'SUCCESS ✓' if delivered else 'FAILED ✗'}")
-        print(f"Total steps: {steps}, Total return: {total_return:.2f}")
-        print("="*60 + "\n")
+        # Final state (only print detailed info if rendering)
+        if not args.no_render:
+            x, y, battery, has_pkg = env._decode(s)
+            print(f"Step {steps:3d}: pos=({x},{y}) bat={battery:2d} {'✓' if delivered else '✗'} → TERMINAL")
+            print("="*60)
+            print(f"RESULT: {'SUCCESS ✓' if delivered else 'FAILED ✗'}")
+            print(f"Total steps: {steps}, Total return: {total_return:.2f}")
+            print("="*60 + "\n")
+        else:
+            # In headless mode, just print a brief summary
+            print(f"[replay] {'SUCCESS' if delivered else 'FAILED'}: steps={steps}, return={total_return:.2f}")
     else:
         print("[replay] Replay skipped due to interruption.")
         steps = 0

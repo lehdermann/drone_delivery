@@ -48,7 +48,7 @@ do
         --max-battery "$max_battery" \
         --seed "$i" \
         --obstacles default \
-        --sleep 0 # Disable sleep for faster execution
+        --no-render # Disable rendering for faster execution
 done
 
 # --- Monte Carlo Experiments: On-Policy and Off-Policy (grid, reproducible) ---
@@ -56,16 +56,18 @@ echo ""
 echo "--- Running Monte Carlo (MC) Experiments: On-Policy ---"
 
 # Grids (reproducible): adjust as needed
-wind_slips=(0.00 0.05 0.10)
-seeds=(0 1 2)
+# Reduce for faster experiments: fewer wind levels and seeds
+wind_slips=(0.00 0.10)  # Reduced from 3 to 2 levels (saves 33% time)
+seeds=(0 1)             # Reduced from 3 to 2 seeds (saves 33% time)
 epsilons=(0.10)
 # mc_episodes is now set from command line argument (default: 50)
+# Total MC runs: 2 wind × 2 seeds × (1 on + 2 off) = 12 runs (was 27)
 
 for ws in "${wind_slips[@]}"; do
   for seed in "${seeds[@]}"; do
     for eps in "${epsilons[@]}"; do
       echo "[MC On-Policy] wind_slip=${ws}, epsilon=${eps}, episodes=${MC_EPISODES}, seed=${seed}"
-      python examples/replay_mc_policy.py --wind-slip "$ws" --epsilon "$eps" --episodes "$MC_EPISODES" --seed "$seed" --max-battery 30 --obstacles default --sleep 0 --eval-episodes 100
+      python examples/replay_mc_policy.py --wind-slip "$ws" --epsilon "$eps" --episodes "$MC_EPISODES" --seed "$seed" --max-battery 30 --obstacles default --no-render --eval-episodes 100
     done
   done
 done
@@ -73,14 +75,14 @@ done
 echo ""
 echo "--- Running Monte Carlo (MC) Experiments: Off-Policy (Weighted IS, epsilon behavior) ---"
 
-behavior_epsilons=(0.10 0.20)
+behavior_epsilons=(0.20)  # Reduced from 2 to 1 (saves 50% off-policy time)
 debug_behavior_episodes=200
 
 for ws in "${wind_slips[@]}"; do
   for seed in "${seeds[@]}"; do
     for beps in "${behavior_epsilons[@]}"; do
       echo "[MC Off-Policy] wind_slip=${ws}, behavior=epsilon, behavior_epsilon=${beps}, episodes=${MC_EPISODES}, seed=${seed}"
-      python examples/replay_mc_policy.py --wind-slip "$ws" --episodes "$MC_EPISODES" --seed "$seed" --max-battery 30 --obstacles default --sleep 0 --off-policy --behavior epsilon --behavior-epsilon "$beps" --off-weighted --eval-episodes 100 --debug-behavior --debug-behavior-episodes "$debug_behavior_episodes"
+      python examples/replay_mc_policy.py --wind-slip "$ws" --episodes "$MC_EPISODES" --seed "$seed" --max-battery 30 --obstacles default --no-render --off-policy --behavior epsilon --behavior-epsilon "$beps" --off-weighted --eval-episodes 100 --debug-behavior --debug-behavior-episodes "$debug_behavior_episodes"
     done
   done
 done
