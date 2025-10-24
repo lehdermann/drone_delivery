@@ -78,6 +78,21 @@ All VI options plus:
 | `--features` | basic | Feature set: `basic`, `one_hot`, or `engineered` |
 | `--optimistic-init` | None | Optimistic initialization value for Q |
 
+#### Tile Coding Options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `--features` | tile | Use tile coding features |
+| `--tile-tilings` | 8 | Number of overlapping tilings |
+| `--tile-bins-x` | 8 | Bins along x |
+| `--tile-bins-y` | 8 | Bins along y |
+| `--tile-bins-b` | 8 | Bins along battery |
+
+Tips:
+- Start with `tile-tilings=8` e `bins=6`–`8` por dimensão.
+- Reduza `alpha` proporcionalmente a `1/num_tilings` e use decaimento.
+- `λ` em `0.85–0.95` costuma ser estável; `replacing-traces` ajuda.
+
 ### Example Scenarios
 
 #### 1. One-Hot (Tabular) with Decays, Replacing Traces, and Optimistic Init
@@ -92,6 +107,24 @@ python examples/replay_sarsa_policy.py \
   --alpha 0.05 --alpha-final 0.01 \
   --lam 0.95 --replacing-traces \
   --optimistic-init 10.0 \
+  --max-battery 30 \
+  --obstacles default \
+  --eval-episodes 200
+```
+
+#### 3. Tile Coding (estável e eficiente)
+
+```bash
+python examples/replay_sarsa_policy.py \
+  --no-render \
+  --episodes 20000 \
+  --features tile \
+  --tile-tilings 8 --tile-bins-x 6 --tile-bins-y 6 --tile-bins-b 6 \
+  --gamma 0.995 \
+  --epsilon 0.3 --epsilon-final 0.02 \
+  --alpha 0.007 --alpha-final 0.002 \
+  --lam 0.90 --replacing-traces \
+  --optimistic-init 5.0 \
   --max-battery 30 \
   --obstacles default \
   --eval-episodes 200
