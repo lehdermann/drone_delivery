@@ -54,6 +54,67 @@ python examples/replay_mc_policy.py \
 
 ---
 
+## SARSA(λ) Examples
+
+### Command Structure
+
+```bash
+python examples/replay_sarsa_policy.py [OPTIONS]
+```
+
+### Common Options
+
+All VI options plus:
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `--episodes` | 10000 | Number of training episodes |
+| `--epsilon` | 0.1 | Initial exploration rate |
+| `--epsilon-final` | None | Final epsilon for linear decay (if set) |
+| `--alpha` | 0.05 | Initial step size |
+| `--alpha-final` | None | Final alpha for linear decay (if set) |
+| `--lam` | 0.9 | Trace decay parameter λ |
+| `--replacing-traces` | False | Use replacing instead of accumulating traces |
+| `--features` | basic | Feature set: `basic`, `one_hot`, or `engineered` |
+| `--optimistic-init` | None | Optimistic initialization value for Q |
+
+### Example Scenarios
+
+#### 1. One-Hot (Tabular) with Decays, Replacing Traces, and Optimistic Init
+
+```bash
+python examples/replay_sarsa_policy.py \
+  --no-render \
+  --episodes 10000 \
+  --features one_hot \
+  --gamma 0.995 \
+  --epsilon 0.3 --epsilon-final 0.05 \
+  --alpha 0.05 --alpha-final 0.01 \
+  --lam 0.95 --replacing-traces \
+  --optimistic-init 10.0 \
+  --max-battery 30 \
+  --obstacles default \
+  --eval-episodes 200
+```
+
+#### 2. Engineered Features (Faster Learning) with Decays and Replacing Traces
+
+```bash
+python examples/replay_sarsa_policy.py \
+  --no-render \
+  --episodes 15000 \
+  --features engineered \
+  --gamma 0.995 \
+  --epsilon 0.2 --epsilon-final 0.05 \
+  --alpha 0.02 --alpha-final 0.005 \
+  --lam 0.95 --replacing-traces \
+  --optimistic-init 5.0 \
+  --max-battery 30 \
+  --obstacles default \
+  --eval-episodes 200
+```
+
+
 ## Value Iteration Examples
 
 ### Command Structure

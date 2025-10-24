@@ -7,26 +7,29 @@ LOG_FILE="run_experiments.out"
 exec &> >(tee -a "$LOG_FILE")
 
 
-# This script runs a series of experiments for both Value Iteration (VI)
-# and Monte Carlo (MC) algorithms, logging the results to their respective
-# CSV files (vi_experiments.csv and mc_experiments.csv).
+# This script runs a series of experiments for Value Iteration (VI),
+# Monte Carlo (MC), and SARSA(λ), logging the results to their respective
+# CSV files (vi_experiments.csv, mc_experiments.csv, sarsa_experiments.csv).
 
 # Usage:
-#   ./run_experiments.sh [MC_EPISODES]
+#   ./run_experiments.sh [MC_EPISODES] [SARSA_EPISODES]
 #
 # Arguments:
 #   MC_EPISODES: Number of episodes for Monte Carlo training (default: 50)
+#   SARSA_EPISODES: Number of episodes for SARSA training (default: 5000)
 #
 # Examples:
-#   ./run_experiments.sh          # Use default (50 episodes)
-#   ./run_experiments.sh 5000     # Use 5000 episodes
+#   ./run_experiments.sh                   # Use defaults (MC:50, SARSA:5000)
+#   ./run_experiments.sh 5000 10000        # MC:5000 episodes, SARSA:10000 episodes
 
 # Parse command line arguments
-MC_EPISODES=${1:-50}  # Default to 50 if not provided
+MC_EPISODES=${1:-50}       # Default to 50 if not provided
+SARSA_EPISODES=${2:-5000}  # Default to 5000 if not provided
 
 echo "========================================================================"
 echo "Starting new experiment suite at $(date)"
 echo "MC Episodes: ${MC_EPISODES}"
+echo "SARSA Episodes: ${SARSA_EPISODES}"
 echo "========================================================================"
 
 echo "Starting experiment suite..."
@@ -87,6 +90,34 @@ for ws in "${wind_slips[@]}"; do
   done
 done
 
+# --- SARSA(λ) Experiments (grid, reproducible) ---
 echo ""
-echo "Experiment suite finished. Results are in vi_experiments.csv and mc_experiments.csv."
+echo "--- Running SARSA(λ) Experiments ---"
+
+# Use a small grid to keep runtime reasonable; tuned based on prior validation
+sarsa_wind_slips=(0.00 0.10)
+sarsa_seeds=(0 1)
+
+for ws in "${sarsa_wind_slips[@]}"; do
+  for seed in "${sarsa_seeds[@]}"; do
+    echo "[SARSA] wind_slip=${ws}, episodes=${SARSA_EPISODES}, seed=${seed}, features=one_hot"
+    python examples/replay_sarsa_policy.py \
+      --no-render \
+      --episodes "${SARSA_EPISODES}" \
+      --features one_hot \
+      --gamma 0.995 \
+      --epsilon 0.3 --epsilon-final 0.05 \
+      --alpha 0.05 --alpha-final 0.01 \
+      --lam 0.95 --replacing-traces \
+      --optimistic-init 10.0 \
+      --wind-slip "$ws" \
+      --max-battery 30 \
+      --obstacles default \
+      --eval-episodes 100 \
+      --seed "$seed"
+  done
+done
+
+echo ""
+echo "Experiment suite finished. Results are in vi_experiments.csv, mc_experiments.csv, and sarsa_experiments.csv."
 echo "Full console output logged to ${LOG_FILE}."

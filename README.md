@@ -1,6 +1,6 @@
 # MDP Lab: Drone Delivery with Wind and Battery (Tabular RL)
 
-This project implements a custom Gymnasium environment for a drone delivery task with wind-induced action noise and a battery constraint. It includes tabular algorithms from Sutton & Barto (RL: An Introduction): Dynamic Programming (Value Iteration, Policy Iteration) and Monte Carlo Control (on-policy, epsilon-soft, first-visit).
+This project implements a custom Gymnasium environment for a drone delivery task with wind-induced action noise and a battery constraint. It includes tabular algorithms from Sutton & Barto (RL: An Introduction): Dynamic Programming (Value Iteration, Policy Iteration), Monte Carlo Control (on-policy, epsilon-soft, first-visit), and SARSA(λ) with linear function approximation.
 
 ![Drone Delivery Environment](docs/environment.png)
 
@@ -45,16 +45,20 @@ Default settings keep the state space small and suitable for tabular methods.
 - Monte Carlo (model-free):
   - On-policy MC Control, epsilon-soft, first-visit
   - Off-policy Monte Carlo Control using Importance Sampling
+- SARSA(λ) (model-free):
+  - SARSA(λ) with linear function approximation
 
 ## Project Structure
 - `envs/drone_delivery.py` — Gymnasium environment with `enumerate_transitions(s, a)` for DP.
 - `algorithms/dp.py` — Value Iteration and Policy Iteration implementations.
 - `algorithms/mc.py` — On-policy and Off-policy MC Control with Importance Sampling.
+- `algorithms/sarsa.py` — SARSA(λ) with linear FA (feature options, decays, replacing traces, optimistic init).
 - `examples/replay_vi_policy.py` — Visualize and evaluate Value Iteration policies.
 - `examples/replay_mc_policy.py` — Visualize and evaluate Monte Carlo policies.
+- `examples/replay_sarsa_policy.py` — Train/evaluate/replay SARSA(λ) policies.
 - `docs/examples_guide.md` — Comprehensive guide for using the example scripts.
 - `docs/ALGORITHMS.md` — Detailed algorithm documentation and implementation notes.
-- `run_experiments.sh` — Automated experiment suite for VI and MC.
+- `run_experiments.sh` — Automated experiment suite for VI, MC, and SARSA.
 - `requirements.txt` — Lightweight dependencies for the tabular project.
 
 ## Setup
@@ -93,7 +97,24 @@ python examples/replay_mc_policy.py \
 ./run_experiments.sh
 ```
 
-Results are saved to `vi_experiments.csv` and `mc_experiments.csv`.
+Results are saved to `vi_experiments.csv`, `mc_experiments.csv`, and `sarsa_experiments.csv`.
+
+### Visualize SARSA(λ) Policy (examples)
+
+```bash
+python examples/replay_sarsa_policy.py \
+  --no-render \
+  --episodes 10000 \
+  --features one_hot \
+  --gamma 0.995 \
+  --epsilon 0.3 --epsilon-final 0.05 \
+  --alpha 0.05 --alpha-final 0.01 \
+  --lam 0.95 --replacing-traces \
+  --optimistic-init 10.0 \
+  --max-battery 30 \
+  --obstacles default \
+  --eval-episodes 200
+```
 
 ## Features
 
@@ -101,7 +122,7 @@ Results are saved to `vi_experiments.csv` and `mc_experiments.csv`.
 - **Live matplotlib rendering** with drone, obstacles, charging stations, and package
 - **Trajectory tracking** showing step-by-step decisions
 - **Policy summary** with action distribution and Q-values
-- **Progress monitoring** with tqdm progress bars for MC training
+- **Progress monitoring** with tqdm progress bars for MC/SARSA training
 - **Graceful interruption** (Ctrl+C) with partial result saving
 
 ### Multiple Charging Stations
