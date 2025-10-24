@@ -1,6 +1,6 @@
 # MDP Lab: Drone Delivery with Wind and Battery (Tabular RL)
 
-This project implements a custom Gymnasium environment for a drone delivery task with wind-induced action noise and a battery constraint. It includes tabular algorithms from Sutton & Barto (RL: An Introduction): Dynamic Programming (Value Iteration, Policy Iteration), Monte Carlo Control (on-policy, epsilon-soft, first-visit), and SARSA(λ) with linear function approximation.
+This project implements a custom Gymnasium environment for a drone delivery task with wind‑induced action noise and a battery constraint. It includes tabular Dynamic Programming (Value Iteration, Policy Iteration), tabular Monte Carlo Control (on‑policy and off‑policy with importance sampling), and SARSA(λ) with linear function approximation (basic/one‑hot/engineered/tile coding).
 
 ![Drone Delivery Environment](docs/environment.png)
 
