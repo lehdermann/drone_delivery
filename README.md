@@ -52,7 +52,7 @@ Default settings keep the state space small and suitable for tabular methods.
 - `envs/drone_delivery.py` — Gymnasium environment with `enumerate_transitions(s, a)` for DP.
 - `algorithms/dp.py` — Value Iteration and Policy Iteration implementations.
 - `algorithms/mc.py` — On-policy and Off-policy MC Control with Importance Sampling.
-- `algorithms/sarsa.py` — SARSA(λ) with linear FA (feature options, decays, replacing traces, optimistic init).
+- `algorithms/sarsa.py` — SARSA(λ) with linear FA (feature options incl. tile coding, decays, replacing traces, optimistic init).
 - `examples/replay_vi_policy.py` — Visualize and evaluate Value Iteration policies.
 - `examples/replay_mc_policy.py` — Visualize and evaluate Monte Carlo policies.
 - `examples/replay_sarsa_policy.py` — Train/evaluate/replay SARSA(λ) policies.
@@ -111,6 +111,24 @@ python examples/replay_sarsa_policy.py \
   --alpha 0.05 --alpha-final 0.01 \
   --lam 0.95 --replacing-traces \
   --optimistic-init 10.0 \
+  --max-battery 30 \
+  --obstacles default \
+  --eval-episodes 200
+```
+
+Tile Coding variant (stable and efficient):
+
+```bash
+python examples/replay_sarsa_policy.py \
+  --no-render \
+  --episodes 20000 \
+  --features tile \
+  --tile-tilings 8 --tile-bins-x 6 --tile-bins-y 6 --tile-bins-b 6 \
+  --gamma 0.995 \
+  --epsilon 0.3 --epsilon-final 0.02 \
+  --alpha 0.007 --alpha-final 0.002 \
+  --lam 0.90 --replacing-traces \
+  --optimistic-init 5.0 \
   --max-battery 30 \
   --obstacles default \
   --eval-episodes 200

@@ -31,6 +31,7 @@ from algorithms.sarsa import (
     default_feature_fn,
     one_hot_feature_fn,
     engineered_feature_fn,
+    tile_coding_feature_fn,
 )
 
 
@@ -55,9 +56,18 @@ def parse_args() -> argparse.Namespace:
         "--features",
         type=str,
         default="basic",
-        choices=["basic", "one_hot", "engineered"],
-        help="Feature set for linear FA: basic (default), one_hot (tabular), engineered",
+        choices=["basic", "one_hot", "engineered", "tile"],
+        help="Feature set for linear FA: basic (default), one_hot (tabular), engineered, tile",
     )
+    # Tile coding options
+    p.add_argument("--tile-tilings", dest="tile_tilings", type=int, default=8,
+                   help="Number of overlapping tilings for tile coding (default: 8)")
+    p.add_argument("--tile-bins-x", dest="tile_bins_x", type=int, default=8,
+                   help="Number of bins along x for tile coding (default: 8)")
+    p.add_argument("--tile-bins-y", dest="tile_bins_y", type=int, default=8,
+                   help="Number of bins along y for tile coding (default: 8)")
+    p.add_argument("--tile-bins-b", dest="tile_bins_b", type=int, default=8,
+                   help="Number of bins along battery for tile coding (default: 8)")
     # Schedules (linear decay)
     p.add_argument(
         "--epsilon-final",
@@ -188,6 +198,12 @@ def main() -> None:
         phi = one_hot_feature_fn(env)
     elif args.features == "engineered":
         phi = engineered_feature_fn(env)
+    elif args.features == "tile":
+        phi = tile_coding_feature_fn(
+            env,
+            num_tilings=int(args.tile_tilings),
+            bins_xyb=(int(args.tile_bins_x), int(args.tile_bins_y), int(args.tile_bins_b)),
+        )
     else:
         phi = default_feature_fn(env)
     print(f"[replay] Starting SARSA(λ) training for {args.episodes} episodes...")

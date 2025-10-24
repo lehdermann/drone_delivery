@@ -105,13 +105,30 @@ vi_grouped = vi_df.groupby('wind_slip').agg(
     avg_vi_iters=('vi_iterations', 'mean')
 ).reset_index()
 
-sarsa_grouped = pd.DataFrame()
-if not sarsa_df.empty:
-    sarsa_grouped = sarsa_df.groupby('wind_slip').agg(
-        success_rate=('replay_delivered', 'mean'),
-        avg_return=('replay_return', 'mean'),
-        avg_steps=('replay_steps', 'mean')
-    ).reset_index()
+def group_sarsa_by_features(df: pd.DataFrame) -> dict:
+    groups = {}
+    if df.empty:
+        return groups
+    if 'features' not in df.columns:
+        # Fallback: treat all as unknown feature type
+        grouped = df.groupby('wind_slip').agg(
+            success_rate=('replay_delivered', 'mean'),
+            avg_return=('replay_return', 'mean'),
+            avg_steps=('replay_steps', 'mean')
+        ).reset_index()
+        groups['unknown'] = grouped
+        return groups
+    for name in ['tile', 'one_hot', 'engineered', 'basic']:
+        sub = df[df['features'] == name]
+        if len(sub) > 0:
+            groups[name] = sub.groupby('wind_slip').agg(
+                success_rate=('replay_delivered', 'mean'),
+                avg_return=('replay_return', 'mean'),
+                avg_steps=('replay_steps', 'mean')
+            ).reset_index()
+    return groups
+
+sarsa_groups = group_sarsa_by_features(sarsa_df)
 
 print("\nMC On-Policy grouped:")
 print(mc_on_grouped)
@@ -120,9 +137,11 @@ if len(mc_off_grouped) > 0:
     print(mc_off_grouped)
 print("\nVI grouped:")
 print(vi_grouped)
-if len(sarsa_grouped) > 0:
-    print("\nSARSA grouped:")
-    print(sarsa_grouped)
+if len(sarsa_groups) > 0:
+    print("\nSARSA grouped by features:")
+    for k, g in sarsa_groups.items():
+        print(f"\n- {k}:")
+        print(g)
 
 # Create subplots for comprehensive comparison
 fig, axes = plt.subplots(2, 2, figsize=(14, 10))
@@ -134,8 +153,14 @@ ax.plot(vi_grouped['wind_slip'], vi_grouped['success_rate'], 's-', label='VI', c
 ax.plot(mc_on_grouped['wind_slip'], mc_on_grouped['success_rate'], 'o-', label='MC On-Policy', color='tab:orange', linewidth=2, markersize=8)
 if len(mc_off_grouped) > 0:
     ax.plot(mc_off_grouped['wind_slip'], mc_off_grouped['success_rate'], '^-', label='MC Off-Policy', color='tab:green', linewidth=2, markersize=8)
-if len(sarsa_grouped) > 0:
-    ax.plot(sarsa_grouped['wind_slip'], sarsa_grouped['success_rate'], 'x-', label='SARSA', color='tab:red', linewidth=2, markersize=8)
+if 'tile' in sarsa_groups:
+    ax.plot(sarsa_groups['tile']['wind_slip'], sarsa_groups['tile']['success_rate'], 'x-', label='SARSA Tile', color='tab:red', linewidth=2, markersize=8)
+if 'one_hot' in sarsa_groups:
+    ax.plot(sarsa_groups['one_hot']['wind_slip'], sarsa_groups['one_hot']['success_rate'], 'd-', label='SARSA One-Hot', color='tab:pink', linewidth=2, markersize=7)
+if 'engineered' in sarsa_groups:
+    ax.plot(sarsa_groups['engineered']['wind_slip'], sarsa_groups['engineered']['success_rate'], 'v-', label='SARSA Engineered', color='tab:brown', linewidth=2, markersize=7)
+if 'basic' in sarsa_groups:
+    ax.plot(sarsa_groups['basic']['wind_slip'], sarsa_groups['basic']['success_rate'], 'P-', label='SARSA Basic', color='tab:red', alpha=0.4, linewidth=1.5, markersize=6)
 ax.set_xlabel('Wind Slip Probability', fontsize=11)
 ax.set_ylabel('Success Rate', fontsize=11)
 ax.set_title('Success Rate vs Wind Slip', fontsize=12, fontweight='bold')
@@ -149,8 +174,14 @@ ax.plot(vi_grouped['wind_slip'], vi_grouped['avg_return'], 's-', label='VI', col
 ax.plot(mc_on_grouped['wind_slip'], mc_on_grouped['avg_return'], 'o-', label='MC On-Policy', color='tab:orange', linewidth=2, markersize=8)
 if len(mc_off_grouped) > 0:
     ax.plot(mc_off_grouped['wind_slip'], mc_off_grouped['avg_return'], '^-', label='MC Off-Policy', color='tab:green', linewidth=2, markersize=8)
-if len(sarsa_grouped) > 0:
-    ax.plot(sarsa_grouped['wind_slip'], sarsa_grouped['avg_return'], 'x-', label='SARSA', color='tab:red', linewidth=2, markersize=8)
+if 'tile' in sarsa_groups:
+    ax.plot(sarsa_groups['tile']['wind_slip'], sarsa_groups['tile']['avg_return'], 'x-', label='SARSA Tile', color='tab:red', linewidth=2, markersize=8)
+if 'one_hot' in sarsa_groups:
+    ax.plot(sarsa_groups['one_hot']['wind_slip'], sarsa_groups['one_hot']['avg_return'], 'd-', label='SARSA One-Hot', color='tab:pink', linewidth=2, markersize=7)
+if 'engineered' in sarsa_groups:
+    ax.plot(sarsa_groups['engineered']['wind_slip'], sarsa_groups['engineered']['avg_return'], 'v-', label='SARSA Engineered', color='tab:brown', linewidth=2, markersize=7)
+if 'basic' in sarsa_groups:
+    ax.plot(sarsa_groups['basic']['wind_slip'], sarsa_groups['basic']['avg_return'], 'P-', label='SARSA Basic', color='tab:red', alpha=0.4, linewidth=1.5, markersize=6)
 ax.set_xlabel('Wind Slip Probability', fontsize=11)
 ax.set_ylabel('Average Return', fontsize=11)
 ax.set_title('Average Return vs Wind Slip', fontsize=12, fontweight='bold')
@@ -163,8 +194,14 @@ ax.plot(vi_grouped['wind_slip'], vi_grouped['avg_steps'], 's-', label='VI', colo
 ax.plot(mc_on_grouped['wind_slip'], mc_on_grouped['avg_steps'], 'o-', label='MC On-Policy', color='tab:orange', linewidth=2, markersize=8)
 if len(mc_off_grouped) > 0:
     ax.plot(mc_off_grouped['wind_slip'], mc_off_grouped['avg_steps'], '^-', label='MC Off-Policy', color='tab:green', linewidth=2, markersize=8)
-if len(sarsa_grouped) > 0:
-    ax.plot(sarsa_grouped['wind_slip'], sarsa_grouped['avg_steps'], 'x-', label='SARSA', color='tab:red', linewidth=2, markersize=8)
+if 'tile' in sarsa_groups:
+    ax.plot(sarsa_groups['tile']['wind_slip'], sarsa_groups['tile']['avg_steps'], 'x-', label='SARSA Tile', color='tab:red', linewidth=2, markersize=8)
+if 'one_hot' in sarsa_groups:
+    ax.plot(sarsa_groups['one_hot']['wind_slip'], sarsa_groups['one_hot']['avg_steps'], 'd-', label='SARSA One-Hot', color='tab:pink', linewidth=2, markersize=7)
+if 'engineered' in sarsa_groups:
+    ax.plot(sarsa_groups['engineered']['wind_slip'], sarsa_groups['engineered']['avg_steps'], 'v-', label='SARSA Engineered', color='tab:brown', linewidth=2, markersize=7)
+if 'basic' in sarsa_groups:
+    ax.plot(sarsa_groups['basic']['wind_slip'], sarsa_groups['basic']['avg_steps'], 'P-', label='SARSA Basic', color='tab:red', alpha=0.4, linewidth=1.5, markersize=6)
 ax.set_xlabel('Wind Slip Probability', fontsize=11)
 ax.set_ylabel('Average Steps', fontsize=11)
 ax.set_title('Average Steps to Delivery vs Wind Slip', fontsize=12, fontweight='bold')
@@ -200,6 +237,8 @@ print(mc_on_grouped.to_string(index=False))
 if len(mc_off_grouped) > 0:
     print("\nMC Off-Policy:")
     print(mc_off_grouped.to_string(index=False))
-if len(sarsa_grouped) > 0:
-    print("\nSARSA:")
-    print(sarsa_grouped.to_string(index=False))
+if len(sarsa_groups) > 0:
+    print("\nSARSA (by features):")
+    for k, g in sarsa_groups.items():
+        print(f"\n{k}:")
+        print(g.to_string(index=False))

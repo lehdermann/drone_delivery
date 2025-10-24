@@ -118,6 +118,34 @@ for ws in "${sarsa_wind_slips[@]}"; do
   done
 done
 
+# --- SARSA(λ) Experiments: Tile Coding (grid, reproducible) ---
+echo ""
+echo "--- Running SARSA(λ) Experiments (Tile Coding) ---"
+
+tile_wind_slips=(0.00 0.10)
+tile_seeds=(0 1)
+
+for ws in "${tile_wind_slips[@]}"; do
+  for seed in "${tile_seeds[@]}"; do
+    echo "[SARSA Tile] wind_slip=${ws}, episodes=${SARSA_EPISODES}, seed=${seed}, features=tile"
+    python examples/replay_sarsa_policy.py \
+      --no-render \
+      --episodes "${SARSA_EPISODES}" \
+      --features tile \
+      --tile-tilings 8 --tile-bins-x 6 --tile-bins-y 6 --tile-bins-b 6 \
+      --gamma 0.995 \
+      --epsilon 0.3 --epsilon-final 0.02 \
+      --alpha 0.007 --alpha-final 0.002 \
+      --lam 0.90 --replacing-traces \
+      --optimistic-init 5.0 \
+      --wind-slip "$ws" \
+      --max-battery 30 \
+      --obstacles default \
+      --eval-episodes 100 \
+      --seed "$seed"
+  done
+done
+
 echo ""
 echo "Experiment suite finished. Results are in vi_experiments.csv, mc_experiments.csv, and sarsa_experiments.csv."
 echo "Full console output logged to ${LOG_FILE}."

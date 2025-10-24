@@ -54,6 +54,78 @@ def default_feature_fn(env) -> Callable[[int, int], np.ndarray]:
     return phi
 
 
+def tile_coding_feature_fn(
+    env,
+    *,
+    num_tilings: int = 8,
+    bins_xyb: Tuple[int, int, int] = (8, 8, 8),
+    include_package: bool = True,
+) -> Callable[[int, int], np.ndarray]:
+    """Action-specific tile coding over (x, y, battery) normalized to [0,1].
+
+    - For each tiling t in [0..num_tilings-1], we offset the partitioning slightly.
+    - Feature vector is sparse binary with exactly `num_tilings` ones per (s,a).
+    - Dimension = nA * num_tilings * (bins_x * bins_y * bins_b).
+
+    Notes:
+    - We exclude `has_package` from tiling to control dimensionality. Its effect can
+      still be captured indirectly via battery/position and traces; include it if
+      later needed by extending bins to 4D.
+    """
+    nA = int(env.nA)
+    bx, by, bb = map(int, bins_xyb)
+    assert bx > 0 and by > 0 and bb > 0 and num_tilings > 0
+
+    package_bins = 2 if include_package else 1
+    tiles_per_tiling = bx * by * bb * package_bins
+    per_action = num_tilings * tiles_per_tiling
+    # Add per-action bias features to allow baseline offset learning
+    total_dim = nA * per_action + nA
+
+    width = float(max(1, env.width - 1))
+    height = float(max(1, env.height - 1))
+    max_battery = float(max(1, env.max_battery))
+
+    # Precompute fractional offsets per tiling per dimension
+    # Small stagger to avoid aliasing; wrap-around with modulo
+    offsets = [
+        (t / num_tilings) / bx for t in range(num_tilings)
+    ], [
+        (t / num_tilings) / by for t in range(num_tilings)
+    ], [
+        (t / num_tilings) / bb for t in range(num_tilings)
+    ]
+
+    def to_bin(val_01: float, bins: int, off: float) -> int:
+        v = (val_01 + off) % 1.0
+        idx = int(np.floor(min(0.999999, max(0.0, v)) * bins))
+        return idx
+
+    def flat_index(ix: int, iy: int, ib: int, ip: int) -> int:
+        base = (ix * by + iy) * bb + ib
+        return base * package_bins + ip
+
+    def phi(s: int, a: int) -> np.ndarray:
+        x, y, b, p = env._decode(s)
+        x_n = float(x) / width
+        y_n = float(y) / height
+        b_n = float(b) / max_battery
+        ip = 1 if (int(p) > 0) else 0
+
+        feat = np.zeros(total_dim, dtype=np.float64)
+        action_offset = int(a) * per_action
+        for t in range(num_tilings):
+            ix = to_bin(x_n, bx, offsets[0][t])
+            iy = to_bin(y_n, by, offsets[1][t])
+            ib = to_bin(b_n, bb, offsets[2][t])
+            tile_idx = flat_index(ix, iy, ib, (ip if include_package else 0))
+            feat[action_offset + t * tiles_per_tiling + tile_idx] = 1.0
+        # Per-action bias at the end
+        feat[nA * per_action + int(a)] = 1.0
+        return feat
+
+    return phi
+
 def one_hot_feature_fn(env) -> Callable[[int, int], np.ndarray]:
     """Tabular one-hot features for exact representation of Q(s, a).
 

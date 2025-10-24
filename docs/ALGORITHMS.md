@@ -201,6 +201,9 @@ Function: `sarsa_lambda_linear(env, episodes=10_000, gamma=0.99, lam=0.9, alpha=
   - `default_feature_fn(env)`: bias + normalized (x,y,battery,has_package) + action one-hot.
   - `one_hot_feature_fn(env)`: tabular one-hot over (s,a) with dimension `nS*nA`.
   - `engineered_feature_fn(env)`: bias, normalized position/battery, distances to pickup/dropoff, charging/pickup/dropoff flags, simple interactions, + action one-hot.
+  - `tile_coding_feature_fn(env, num_tilings=8, bins_xyb=(6,6,6), include_package=True)`: tile coding por ação sobre `(x,y,battery[,has_package])` com offsets por tiling. Vetor esparso com `num_tilings` ativações por (s,a) (+ um viés por ação). Dimensão `= nA * (num_tilings * (bins_x * bins_y * bins_b * (2 se include_package senão 1))) + nA`.
+    - Notas: `include_package=True` separa fases (carregando/entregue) e ajuda a política.
+    - Recomendações: `num_tilings∈[8,16]`, `bins_x=bins_y=bins_b∈[4,8]`. Passo `α ≈ 0.1/num_tilings` (reduzir um pouco com traços). `λ∈[0.85,0.95]`.
 - Returns: `SarsaLambdaResult(weights=w, returns=[G_ep])`.
 
 Update equations per step:
@@ -331,6 +334,9 @@ The algorithms implemented in this project follow the standard formulations from
   - Algorithm 4.3: Policy Iteration (p. 80) and Value Iteration
   - Algorithm 5.4: On-policy first-visit MC control
   - Algorithm 5.7: Off-policy MC control with weighted importance sampling
-  - Chapter 6: Temporal-Difference Learning (includes on-policy TD control, Sarsa)
-  - Chapter 12: Eligibility Traces (includes Sarsa(λ), Watkins's Q(λ))
+  - Chapter 6: Temporal-Difference Learning
+    - Section: Sarsa (On-policy TD control)
+  - Chapter 12: Eligibility Traces
+    - Section: Sarsa(λ) (On-policy control with eligibility traces)
+    - Section: Watkins's Q(λ)
 
