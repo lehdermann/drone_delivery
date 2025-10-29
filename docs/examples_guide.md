@@ -19,9 +19,9 @@ This guide explains how to use the example scripts to visualize and evaluate lea
 
 The `examples/` directory contains two main scripts:
 
-1. **`replay_vi_policy.py`** - Trains usando Value Iteration (DP) e visualiza a política ótima
-2. **`replay_mc_policy.py`** - Trains usando Monte Carlo Control e visualiza a política aprendida
-3. **`replay_sb3_policy.py`** - Reproduz políticas treinadas com SB3 (PPO, A2C, DQN) com visualização
+1. **`replay_vi_policy.py`** - Trains using Value Iteration (DP) and visualizes the optimal policy
+2. **`replay_mc_policy.py`** - Trains using Monte Carlo Control and visualizes the learned policy
+3. **`replay_sb3_policy.py`** - Replays SB3-trained policies (PPO, A2C, DQN) with visualization
 
 Both scripts provide:
 - Live visualization with matplotlib
@@ -103,9 +103,9 @@ All VI options plus:
 | `--tile-bins-b` | 8 | Bins along battery |
 
 Tips:
-- Start with `tile-tilings=8` e `bins=6`–`8` por dimensão.
-- Reduza `alpha` proporcionalmente a `1/num_tilings` e use decaimento.
-- `λ` em `0.85–0.95` costuma ser estável; `replacing-traces` ajuda.
+- Start with `tile-tilings=8` and `bins=6`–`8` per dimension.
+- Reduce `alpha` roughly proportional to `1/num_tilings` and use decay.
+- `λ` in `0.85–0.95` is often stable; `replacing-traces` helps.
 
 ### Example Scenarios
 
@@ -126,7 +126,7 @@ python examples/replay_sarsa_policy.py \
   --eval-episodes 200
 ```
 
-#### 3. Tile Coding (estável e eficiente)
+#### 3. Tile Coding (stable and efficient)
 
 ```bash
 python examples/replay_sarsa_policy.py \
@@ -322,10 +322,10 @@ python examples/train_dqn.py
 TensorBoard:
 
 ```bash
-python -m tensorboard.main --logdir ./tensorboard
+python -m tensorboard.main --logdir ./tb_logs
 ```
 
-### Replay com Obstáculos e Estações
+### Replay with Obstacles and Charging Stations
 
 ```bash
 python examples/replay_sb3_policy.py \
@@ -338,7 +338,7 @@ python examples/replay_sb3_policy.py \
   --charging-stations "0,0;3,6;6,3"
 ```
 
-Headless + CSV por episódio:
+Headless + per-episode CSV:
 
 ```bash
 python examples/replay_sb3_policy.py \
@@ -350,7 +350,7 @@ python examples/replay_sb3_policy.py \
   --obstacles default --charging-stations default
 ```
 
-Nota: O script ajusta automaticamente `max_battery` no modo one-hot se o shape esperado pelo modelo diferir (modelo treinado com outra bateria).
+Note: The script automatically adjusts `max_battery` in one-hot mode if the model expects a different one-hot dimension (e.g., trained with another battery size).
 
 ---
 
@@ -449,9 +449,9 @@ cd /Users/familia/src/rl_gym/drone_delivery
 
 This script:
 1. Runs 10 VI experiments with random parameters
-2. Runs MC on-policy and off-policy (amostragem reduzida)
-3. Runs SARSA(λ) (one_hot e tile)
-4. Runs SB3 replays para PPO/A2C/DQN, salvando em `sb3_experiments.csv`
+2. Runs MC on-policy and off-policy (reduced sampling)
+3. Runs SARSA(λ) (one_hot and tile)
+4. Runs SB3 replays for PPO/A2C/DQN, saving to `sb3_experiments.csv`
 
 **Output:**
 - `vi_experiments.csv` - VI results
@@ -543,7 +543,7 @@ Then compare results and generate the consolidated plot:
 
 ```bash
 python create_plot.py
-open performance_plot.png  # ou xdg-open no Linux
+open performance_plot.png  # or xdg-open on Linux
 ```
 
 ### 5. Debugging Policies

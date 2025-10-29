@@ -338,51 +338,83 @@ The project also includes model-free deep RL baselines using Stable-Baselines3 (
 - Replay script:
   - `examples/replay_sb3_policy.py`
 - Wrappers (`wrappers/sb3_wrappers.py`):
-  - `OneHotObservationWrapper`: converts tabular `Discrete(nS)` to `Box(nS,)` one-hot (default para treino)
-  - `DecodedObservationWrapper`: converte para vetores contínuos normalizados (x, y, battery, has_package)
+  - `OneHotObservationWrapper`: converts tabular `Discrete(nS)` to `Box(nS,)` one-hot (default for training)
+  - `DecodedObservationWrapper`: converts to normalized continuous feature vectors (x, y, battery, has_package)
 
-### Treinamento (scripts train_*.py)
+### Training (train_*.py scripts)
 
-- Ambiente padrão (atual): `max_battery=30`, `wind_slip=0.05`
-- Duração de treino:
+- Default environment: `max_battery=30`, `wind_slip=0.05`
+- Training length:
   - PPO: `total_timesteps ≈ 3_000_000`
   - A2C: `total_timesteps ≈ 2_000_000`
   - DQN: `total_timesteps ≈ 1_000_000`
-- Boas práticas implementadas:
-  - `device='cpu'` explícito para evitar avisos de GPU
-  - `EvalCallback` com ambiente de avaliação envolto em `Monitor` salvando `models/<algo>_best/best_model.zip`
-  - `tensorboard_log` habilitado; inclua `tensorboard` nas dependências
-  - Seeds fixos para reprodutibilidade
-  - `OneHotObservationWrapper` como padrão (estado discreto tabular)
+- Implemented best practices:
+  - Explicit `device='cpu'` to avoid GPU warnings
+  - `EvalCallback` with evaluation env wrapped in `Monitor`, saving `models/<algo>_best/best_model.zip`
+  - `tensorboard_log` enabled; ensure `tensorboard` is installed
+  - Fixed seeds for reproducibility
+  - `OneHotObservationWrapper` as default (tabular discrete state)
+
+### Algorithm summaries (theory and practice)
+
+#### PPO (Proximal Policy Optimization)
+
+- Objective: maximize a clipped surrogate:
+  - \( L^{CLIP}(\theta) = E_t[ \min(r_t(\theta) \hat{A}_t, \; \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon) \hat{A}_t) ] \)
+  - with policy ratio \( r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)} \)
+- Value and entropy terms added: \( L = L^{CLIP} + c_1 L^{VF} + c_2 H[\pi]\)
+- Advantages via GAE(\(\lambda\)): reduces variance
+- Typical hyperparameters here: `clip_range=0.2`, `n_steps=256`, `batch_size=2048`, `n_epochs=10`, `gae_lambda=0.95`, `gamma=0.99`, `ent_coef=0.01`, `lr=2.5e-4`
+- Key TensorBoard metrics:
+  - `train/approx_kl` (too high/low can indicate bad step size or clipping)
+  - `train/clip_fraction` (fraction of clipped updates)
+  - `train/entropy_loss`, `train/value_loss`, `rollout/ep_rew_mean`, `rollout/ep_len_mean`
+
+#### A2C (Advantage Actor-Critic)
+
+- Objective: policy gradient with value baseline: \( \nabla_\theta J \approx E[ \nabla_\theta \log \pi_\theta(a|s) (R - V(s)) ] \)
+- Synchronous updates over multiple envs; value loss for critic and optional entropy bonus
+- Typical hyperparameters here: `n_steps=20`, `gamma=0.99`, `gae_lambda=0.95`, `ent_coef=0.01`, `lr=3e-4`
+- Key TensorBoard metrics:
+  - `train/entropy_loss`, `train/value_loss`, `rollout/ep_rew_mean`, `rollout/ep_len_mean`
+
+#### DQN (Deep Q-Network)
+
+- Objective: minimize TD error with target network:
+  - \( L = E[(r + \gamma \max_{a'} Q_{\theta^-}(s', a') - Q_\theta(s,a))^2] \)
+- Experience replay buffer, target network updates, \(\epsilon\)-greedy exploration (here controlled via `exploration_fraction`)
+- Typical hyperparameters here: `buffer_size=100_000`, `learning_starts=10_000`, `target_update_interval=1_000`, `train_freq=(4, step)`, `exploration_fraction=0.2`, `lr` default
+- Key TensorBoard metrics:
+  - `rollout/ep_rew_mean`, `rollout/ep_len_mean`; DQN-specific losses appear under training logs
 
 TensorBoard:
 
-- Instalação: `pip install tensorboard`
-- Execução (WSL/venv): `python -m tensorboard.main --logdir ./tensorboard` ou usar o binário do venv
+- Install: `pip install tensorboard`
+- Run (WSL/venv): `python -m tensorboard.main --logdir ./tb_logs` or use the venv binary
 
 ### Replay (`examples/replay_sb3_policy.py`)
 
-- Carrega automaticamente o melhor modelo se existir: `models/<algo>_best/best_model.zip`
-- Parâmetros de ambiente configuráveis: `--width`, `--height`, `--max-battery`, `--charge-rate`, `--wind-slip`, `--obstacles`, `--charging-stations`
-- Modos de observação: `--one-hot` (padrão) ou `--decoded`
-- Execução headless e logging:
-  - `--no-render` desabilita GUI
-  - `--to-csv sb3_experiments.csv` registra métricas por episódio (return, steps, delivered)
-- Ajuste automático de shape (one-hot):
-  - Se o modelo esperar dimensão one-hot diferente (p.ex. treinado com outro `max_battery`), o script recalcula e reconstrói o ambiente com `max_battery` compatível, preservando obstáculos e estações
+- Automatically loads the best model if present: `models/<algo>_best/best_model.zip`
+- Configurable environment parameters: `--width`, `--height`, `--max-battery`, `--charge-rate`, `--wind-slip`, `--obstacles`, `--charging-stations`
+- Observation modes: `--one-hot` (default) or `--decoded`
+- Headless execution and logging:
+  - `--no-render` disables GUI
+  - `--to-csv sb3_experiments.csv` logs per-episode metrics (return, steps, delivered)
+- Automatic one-hot shape adjustment:
+  - If the model expects a different one-hot dimension (e.g., trained with different `max_battery`), the script infers and rebuilds the env with a compatible `max_battery`, keeping obstacles and charging stations
 
-### Problemas comuns e soluções
+### Common issues and fixes
 
-- `ModuleNotFoundError` (imports do projeto):
-  - Scripts adicionam a raiz do projeto ao `sys.path`
+- `ModuleNotFoundError` (project imports):
+  - Scripts add the project root to `sys.path`
 - `UserWarning: You are using an evaluation environment without a Monitor wrapper`:
-  - Avaliação envolve `Monitor` para registrar métricas corretamente
-- Avisos de GPU/CUDA:
-  - Forçar `device='cpu'` nos `load()`/construtores dos modelos
+  - Evaluation env is wrapped with `Monitor` to record metrics properly
+- GPU/CUDA warnings:
+  - Force `device='cpu'` in `load()`/model constructors
 - `ImportError: No module named 'tensorboard'`:
-  - Adicionada dependência `tensorboard` e instruções de execução
-- `ValueError: Unexpected observation shape` no replay:
-  - O `replay_sb3_policy.py` ajusta automaticamente `max_battery` no modo one-hot para casar com o modelo
+  - Add `tensorboard` dependency and use the commands above
+- `ValueError: Unexpected observation shape` during replay:
+  - `replay_sb3_policy.py` auto-adjusts `max_battery` in one-hot mode to match the model
 
 
 ## References
@@ -397,4 +429,8 @@ TensorBoard:
   - Chapter 12: Eligibility Traces
     - Section: Sarsa(λ) (On-policy control with eligibility traces)
     - Section: Watkins's Q(λ)
+
+- Schulman, J., Wolski, F., Dhariwal, P., Radford, A., & Klimov, O. (2017). Proximal Policy Optimization Algorithms. arXiv:1707.06347. (PPO)
+- Mnih, V., Kavukcuoglu, K., Silver, D., et al. (2015). Human-level control through deep reinforcement learning. Nature, 518, 529–533. (DQN)
+- Mnih, V., Badia, A. P., Mirza, M., et al. (2016). Asynchronous Methods for Deep Reinforcement Learning. ICML. (A3C; A2C is the synchronous variant)
 
