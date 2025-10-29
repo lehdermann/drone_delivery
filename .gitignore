@@ -42,3 +42,17 @@ htmlcov/
 
 # User-specific files like environment variables
 .env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# Training artifacts and logs
+tb_logs/
+models/
+run_experiments.out
+
+# Generated experiment results (kept in repo at project root)

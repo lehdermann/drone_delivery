@@ -35,11 +35,22 @@ except Exception as e:
     print(f"Error loading sarsa_experiments.csv: {e}")
     sarsa_df = pd.DataFrame()
 
+# Try load SB3 data (PPO/A2C/DQN, optional)
+try:
+    print("Loading sb3_experiments.csv...")
+    sb3_df = pd.read_csv('sb3_experiments.csv', on_bad_lines='skip')
+    print(f"Loaded {len(sb3_df)} SB3 experiments")
+except Exception as e:
+    print(f"Error loading sb3_experiments.csv: {e}")
+    sb3_df = pd.DataFrame()
+
 # Check and print column names
 print("\nMC columns:", mc_df.columns.tolist())
 print("VI columns:", vi_df.columns.tolist())
 if not sarsa_df.empty:
     print("SARSA columns:", sarsa_df.columns.tolist())
+if not sb3_df.empty:
+    print("SB3 columns:", sb3_df.columns.tolist())
 
 # Convert boolean columns from string to actual boolean
 if 'replay_delivered' in mc_df.columns:
@@ -53,11 +64,16 @@ if 'replay_delivered' in vi_df.columns:
 if not sarsa_df.empty and 'replay_delivered' in sarsa_df.columns:
     sarsa_df['replay_delivered'] = sarsa_df['replay_delivered'].apply(lambda x: str(x).lower() == 'true' if isinstance(x, str) else bool(x))
 
+if 'replay_delivered' in locals().get('sb3_df', pd.DataFrame()).columns:
+    sb3_df['replay_delivered'] = sb3_df['replay_delivered'].apply(lambda x: str(x).lower() == 'true' if isinstance(x, str) else bool(x))
+
 # Convert wind_slip to numeric
 mc_df['wind_slip'] = pd.to_numeric(mc_df['wind_slip'], errors='coerce')
 vi_df['wind_slip'] = pd.to_numeric(vi_df['wind_slip'], errors='coerce')
 if not sarsa_df.empty and 'wind_slip' in sarsa_df.columns:
     sarsa_df['wind_slip'] = pd.to_numeric(sarsa_df['wind_slip'], errors='coerce')
+if not sb3_df.empty and 'wind_slip' in sb3_df.columns:
+    sb3_df['wind_slip'] = pd.to_numeric(sb3_df['wind_slip'], errors='coerce')
 
 # Identify MC on-policy vs off-policy
 # Off-policy has 'behavior' column or can be identified by presence of off_policy flag
@@ -79,6 +95,15 @@ if len(mc_off) > 0:
 vi_df = vi_df.dropna(subset=['wind_slip', 'replay_delivered'])
 if not sarsa_df.empty:
     sarsa_df = sarsa_df.dropna(subset=['wind_slip', 'replay_delivered'])
+if not sb3_df.empty:
+    # Ensure expected columns are present
+    needed = ['algo', 'wind_slip', 'replay_delivered', 'replay_return', 'replay_steps']
+    missing = [c for c in needed if c not in sb3_df.columns]
+    if missing:
+        print(f"Warning: SB3 data missing columns: {missing}")
+        sb3_df = pd.DataFrame()
+    else:
+        sb3_df = sb3_df.dropna(subset=['wind_slip', 'replay_delivered'])
 
 print(f"After cleaning: {len(mc_on)} MC on-policy, {len(mc_off)} MC off-policy, {len(vi_df)} VI experiments")
 
@@ -104,6 +129,22 @@ vi_grouped = vi_df.groupby('wind_slip').agg(
     avg_steps=('replay_steps', 'mean'),
     avg_vi_iters=('vi_iterations', 'mean')
 ).reset_index()
+
+# SB3 grouped by algorithm
+if not sb3_df.empty:
+    sb3_grouped = sb3_df.groupby(['algo', 'wind_slip']).agg(
+        success_rate=('replay_delivered', 'mean'),
+        avg_return=('replay_return', 'mean'),
+        avg_steps=('replay_steps', 'mean')
+    ).reset_index()
+    ppo_grouped = sb3_grouped[sb3_grouped['algo'] == 'ppo']
+    a2c_grouped = sb3_grouped[sb3_grouped['algo'] == 'a2c']
+    dqn_grouped = sb3_grouped[sb3_grouped['algo'] == 'dqn']
+else:
+    sb3_grouped = pd.DataFrame()
+    ppo_grouped = pd.DataFrame()
+    a2c_grouped = pd.DataFrame()
+    dqn_grouped = pd.DataFrame()
 
 def group_sarsa_by_features(df: pd.DataFrame) -> dict:
     groups = {}
@@ -142,10 +183,16 @@ if len(sarsa_groups) > 0:
     for k, g in sarsa_groups.items():
         print(f"\n- {k}:")
         print(g)
+if not sb3_grouped.empty:
+    print("\nSB3 grouped (by algo):")
+    for name, df in [("PPO", ppo_grouped), ("A2C", a2c_grouped), ("DQN", dqn_grouped)]:
+        if len(df) > 0:
+            print(f"\n- {name}:")
+            print(df)
 
 # Create subplots for comprehensive comparison
 fig, axes = plt.subplots(2, 2, figsize=(14, 10))
-fig.suptitle('Algorithm Comparison: VI vs MC On-Policy vs MC Off-Policy vs SARSA', fontsize=16, fontweight='bold')
+fig.suptitle('Algorithm Comparison: VI, MC, SARSA, and SB3 (PPO/A2C/DQN)', fontsize=16, fontweight='bold')
 
 # Plot 1: Success Rate vs Wind Slip
 ax = axes[0, 0]
@@ -161,6 +208,12 @@ if 'engineered' in sarsa_groups:
     ax.plot(sarsa_groups['engineered']['wind_slip'], sarsa_groups['engineered']['success_rate'], 'v-', label='SARSA Engineered', color='tab:brown', linewidth=2, markersize=7)
 if 'basic' in sarsa_groups:
     ax.plot(sarsa_groups['basic']['wind_slip'], sarsa_groups['basic']['success_rate'], 'P-', label='SARSA Basic', color='tab:red', alpha=0.4, linewidth=1.5, markersize=6)
+if len(ppo_grouped) > 0:
+    ax.plot(ppo_grouped['wind_slip'], ppo_grouped['success_rate'], '*--', label='PPO (SB3)', color='tab:cyan', linewidth=2, markersize=9)
+if len(a2c_grouped) > 0:
+    ax.plot(a2c_grouped['wind_slip'], a2c_grouped['success_rate'], '+--', label='A2C (SB3)', color='tab:gray', linewidth=2, markersize=9)
+if len(dqn_grouped) > 0:
+    ax.plot(dqn_grouped['wind_slip'], dqn_grouped['success_rate'], 'X--', label='DQN (SB3)', color='tab:olive', linewidth=2, markersize=9)
 ax.set_xlabel('Wind Slip Probability', fontsize=11)
 ax.set_ylabel('Success Rate', fontsize=11)
 ax.set_title('Success Rate vs Wind Slip', fontsize=12, fontweight='bold')
@@ -182,6 +235,12 @@ if 'engineered' in sarsa_groups:
     ax.plot(sarsa_groups['engineered']['wind_slip'], sarsa_groups['engineered']['avg_return'], 'v-', label='SARSA Engineered', color='tab:brown', linewidth=2, markersize=7)
 if 'basic' in sarsa_groups:
     ax.plot(sarsa_groups['basic']['wind_slip'], sarsa_groups['basic']['avg_return'], 'P-', label='SARSA Basic', color='tab:red', alpha=0.4, linewidth=1.5, markersize=6)
+if len(ppo_grouped) > 0:
+    ax.plot(ppo_grouped['wind_slip'], ppo_grouped['avg_return'], '*--', label='PPO (SB3)', color='tab:cyan', linewidth=2, markersize=9)
+if len(a2c_grouped) > 0:
+    ax.plot(a2c_grouped['wind_slip'], a2c_grouped['avg_return'], '+--', label='A2C (SB3)', color='tab:gray', linewidth=2, markersize=9)
+if len(dqn_grouped) > 0:
+    ax.plot(dqn_grouped['wind_slip'], dqn_grouped['avg_return'], 'X--', label='DQN (SB3)', color='tab:olive', linewidth=2, markersize=9)
 ax.set_xlabel('Wind Slip Probability', fontsize=11)
 ax.set_ylabel('Average Return', fontsize=11)
 ax.set_title('Average Return vs Wind Slip', fontsize=12, fontweight='bold')
@@ -202,6 +261,12 @@ if 'engineered' in sarsa_groups:
     ax.plot(sarsa_groups['engineered']['wind_slip'], sarsa_groups['engineered']['avg_steps'], 'v-', label='SARSA Engineered', color='tab:brown', linewidth=2, markersize=7)
 if 'basic' in sarsa_groups:
     ax.plot(sarsa_groups['basic']['wind_slip'], sarsa_groups['basic']['avg_steps'], 'P-', label='SARSA Basic', color='tab:red', alpha=0.4, linewidth=1.5, markersize=6)
+if len(ppo_grouped) > 0:
+    ax.plot(ppo_grouped['wind_slip'], ppo_grouped['avg_steps'], '*--', label='PPO (SB3)', color='tab:cyan', linewidth=2, markersize=9)
+if len(a2c_grouped) > 0:
+    ax.plot(a2c_grouped['wind_slip'], a2c_grouped['avg_steps'], '+--', label='A2C (SB3)', color='tab:gray', linewidth=2, markersize=9)
+if len(dqn_grouped) > 0:
+    ax.plot(dqn_grouped['wind_slip'], dqn_grouped['avg_steps'], 'X--', label='DQN (SB3)', color='tab:olive', linewidth=2, markersize=9)
 ax.set_xlabel('Wind Slip Probability', fontsize=11)
 ax.set_ylabel('Average Steps', fontsize=11)
 ax.set_title('Average Steps to Delivery vs Wind Slip', fontsize=12, fontweight='bold')
@@ -209,6 +274,7 @@ ax.legend()
 ax.grid(True, alpha=0.3)
 
 # Plot 4: VI Iterations (only for VI)
+# Keep VI-specific subplot
 ax = axes[1, 1]
 ax.plot(vi_grouped['wind_slip'], vi_grouped['avg_vi_iters'], 's-', label='VI Iterations', color='tab:purple', linewidth=2, markersize=8)
 ax.set_xlabel('Wind Slip Probability', fontsize=11)
@@ -216,7 +282,7 @@ ax.set_ylabel('VI Iterations to Convergence', fontsize=11)
 ax.set_title('VI Convergence Speed', fontsize=12, fontweight='bold')
 ax.legend()
 ax.grid(True, alpha=0.3)
-ax.text(0.5, 0.95, 'Note: MC uses fixed episodes, not convergence-based', 
+ax.text(0.5, 0.95, 'Note: MC/SB3 use fixed episodes, not convergence-based', 
         transform=ax.transAxes, ha='center', va='top', fontsize=9, style='italic', 
         bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.3))
 

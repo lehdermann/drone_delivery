@@ -45,6 +45,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--wind-slip", dest="wind_slip", type=float, default=0.05)
     p.add_argument("--obstacles", type=str, default="default",
                    help="Obstacles: 'none', 'default', or comma-separated x,y pairs like '2,3;3,3;4,3'")
+    p.add_argument("--charging-stations", dest="charging_stations", type=str, default="default",
+                   help="Charging stations: 'none', 'default', or comma-separated x,y pairs like '0,0;3,6;6,3'")
     p.add_argument("--seed", type=int, default=0)
     # SARSA(λ)
     p.add_argument("--episodes", type=int, default=10_000)
@@ -173,11 +175,25 @@ def main() -> None:
             print(f"[warning] Could not parse obstacles '{args.obstacles}', using none")
             obstacles = None
 
-    charging_stations = [
-        (0, 0),
-        (3, 6),
-        (6, 3),
-    ]
+    # Parse charging stations
+    charging_stations = None
+    if args.charging_stations == "default":
+        charging_stations = [
+            (0, 0),
+            (3, 6),
+            (6, 3),
+        ]
+    elif args.charging_stations == "none":
+        charging_stations = None  # env will default to [pickup]
+    else:
+        try:
+            charging_stations = []
+            for pair in args.charging_stations.split(";"):
+                x, y = map(int, pair.split(","))
+                charging_stations.append((x, y))
+        except Exception:
+            print(f"[warning] Could not parse charging_stations '{args.charging_stations}', using default [pickup]")
+            charging_stations = None
 
     render_mode = None if args.no_render else "human"
     env = DroneDeliveryEnv(

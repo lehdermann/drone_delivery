@@ -54,6 +54,58 @@ do
         --no-render # Disable rendering for faster execution
 done
 
+# --- SB3 Experiments: PPO, A2C, DQN (replay-based logging) ---
+echo ""
+echo "--- Running SB3 Experiments (PPO, A2C, DQN) ---"
+
+# Settings aligned with current SB3 training scripts
+sb3_algos=("ppo" "a2c" "dqn")
+sb3_wind_slips=(0.05)
+sb3_seeds=(0 1)
+
+# Ensure models are trained (train only if model files do not exist)
+ensure_trained() {
+  local algo="$1"
+  if [ "$algo" = "ppo" ]; then
+    if [ ! -f models/ppo_drone_delivery.zip ] && [ ! -f models/ppo_best/best_model.zip ]; then
+      echo "[SB3] Training PPO model..."
+      python examples/train_ppo.py
+    fi
+  elif [ "$algo" = "a2c" ]; then
+    if [ ! -f models/a2c_drone_delivery.zip ] && [ ! -f models/a2c_best/best_model.zip ]; then
+      echo "[SB3] Training A2C model..."
+      python examples/train_a2c.py
+    fi
+  elif [ "$algo" = "dqn" ]; then
+    if [ ! -f models/dqn_drone_delivery.zip ] && [ ! -f models/dqn_best/best_model.zip ]; then
+      echo "[SB3] Training DQN model..."
+      python examples/train_dqn.py
+    fi
+  fi
+}
+
+# Run replays to log metrics to CSV
+for algo in "${sb3_algos[@]}"; do
+  ensure_trained "$algo"
+  for ws in "${sb3_wind_slips[@]}"; do
+    for seed in "${sb3_seeds[@]}"; do
+      echo "[SB3 ${algo}] wind_slip=${ws}, seed=${seed}, episodes=100"
+      python examples/replay_sb3_policy.py \
+        --algo "$algo" \
+        --episodes 100 \
+        --deterministic \
+        --no-render \
+        --to-csv sb3_experiments.csv \
+        --width 7 --height 7 \
+        --max-battery 30 \
+        --wind-slip "$ws" \
+        --obstacles default \
+        --charging-stations default \
+        --seed "$seed"
+    done
+  done
+done
+
 # --- Monte Carlo Experiments: On-Policy and Off-Policy (grid, reproducible) ---
 echo ""
 echo "--- Running Monte Carlo (MC) Experiments: On-Policy ---"
@@ -147,5 +199,5 @@ for ws in "${tile_wind_slips[@]}"; do
 done
 
 echo ""
-echo "Experiment suite finished. Results are in vi_experiments.csv, mc_experiments.csv, and sarsa_experiments.csv."
+echo "Experiment suite finished. Results are in vi_experiments.csv, mc_experiments.csv, sarsa_experiments.csv, and sb3_experiments.csv."
 echo "Full console output logged to ${LOG_FILE}."

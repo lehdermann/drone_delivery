@@ -8,6 +8,7 @@ This guide explains how to use the example scripts to visualize and evaluate lea
 - [Quick Start](#quick-start)
 - [Value Iteration Examples](#value-iteration-examples)
 - [Monte Carlo Examples](#monte-carlo-examples)
+- [Stable-Baselines3 (PPO/A2C/DQN)](#stable-baselines3-ppoacddqn)
 - [Understanding the Output](#understanding-the-output)
 - [Running Experiments](#running-experiments)
 - [Advanced Usage](#advanced-usage)
@@ -18,8 +19,9 @@ This guide explains how to use the example scripts to visualize and evaluate lea
 
 The `examples/` directory contains two main scripts:
 
-1. **`replay_vi_policy.py`** - Trains using Value Iteration (DP) and visualizes the optimal policy
-2. **`replay_mc_policy.py`** - Trains using Monte Carlo Control and visualizes the learned policy
+1. **`replay_vi_policy.py`** - Trains usando Value Iteration (DP) e visualiza a política ótima
+2. **`replay_mc_policy.py`** - Trains usando Monte Carlo Control e visualiza a política aprendida
+3. **`replay_sb3_policy.py`** - Reproduz políticas treinadas com SB3 (PPO, A2C, DQN) com visualização
 
 Both scripts provide:
 - Live visualization with matplotlib
@@ -50,6 +52,18 @@ python examples/replay_mc_policy.py \
   --episodes 5000 \
   --obstacles default \
   --sleep 0.5
+```
+
+### Basic SB3 Replay (PPO)
+
+```bash
+python examples/replay_sb3_policy.py \
+  --algo ppo \
+  --episodes 5 \
+  --deterministic \
+  --max-battery 30 \
+  --wind-slip 0.05 \
+  --obstacles default --charging-stations default
 ```
 
 ---
@@ -288,6 +302,58 @@ python examples/replay_mc_policy.py \
 
 ---
 
+## Stable-Baselines3 (PPO/A2C/DQN)
+
+### Training
+
+Treinamento padrão (One-Hot, CPU, TensorBoard habilitado):
+
+```bash
+# PPO (~3M steps)
+python examples/train_ppo.py
+
+# A2C (~2M steps)
+python examples/train_a2c.py
+
+# DQN (~1M steps)
+python examples/train_dqn.py
+```
+
+TensorBoard:
+
+```bash
+python -m tensorboard.main --logdir ./tensorboard
+```
+
+### Replay com Obstáculos e Estações
+
+```bash
+python examples/replay_sb3_policy.py \
+  --algo ppo \
+  --episodes 10 \
+  --deterministic \
+  --width 7 --height 7 \
+  --max-battery 30 --charge-rate 2 --wind-slip 0.05 \
+  --obstacles "2,3;3,3;4,3" \
+  --charging-stations "0,0;3,6;6,3"
+```
+
+Headless + CSV por episódio:
+
+```bash
+python examples/replay_sb3_policy.py \
+  --algo dqn \
+  --episodes 100 \
+  --no-render \
+  --to-csv sb3_experiments.csv \
+  --max-battery 30 --wind-slip 0.05 \
+  --obstacles default --charging-stations default
+```
+
+Nota: O script ajusta automaticamente `max_battery` no modo one-hot se o shape esperado pelo modelo diferir (modelo treinado com outra bateria).
+
+---
+
 ## Understanding the Output
 
 ### 1. Policy Summary
@@ -383,12 +449,15 @@ cd /Users/familia/src/rl_gym/drone_delivery
 
 This script:
 1. Runs 10 VI experiments with random parameters
-2. Runs 9 MC on-policy experiments (3 wind levels × 3 seeds)
-3. Runs 18 MC off-policy experiments (3 wind × 3 seeds × 2 behavior epsilons)
+2. Runs MC on-policy and off-policy (amostragem reduzida)
+3. Runs SARSA(λ) (one_hot e tile)
+4. Runs SB3 replays para PPO/A2C/DQN, salvando em `sb3_experiments.csv`
 
 **Output:**
 - `vi_experiments.csv` - VI results
 - `mc_experiments.csv` - MC results
+- `sarsa_experiments.csv` - SARSA results
+- `sb3_experiments.csv` - SB3 replay results
 - `run_experiments.out` - Full console log
 
 ### Customizing the Experiment Script
@@ -470,7 +539,12 @@ python examples/replay_mc_policy.py \
   --sleep 0
 ```
 
-Then compare results in CSV files.
+Then compare results and generate the consolidated plot:
+
+```bash
+python create_plot.py
+open performance_plot.png  # ou xdg-open no Linux
+```
 
 ### 5. Debugging Policies
 

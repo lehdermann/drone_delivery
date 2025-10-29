@@ -318,13 +318,71 @@ The algorithms implemented in this project follow the standard formulations from
 - Convergence criteria match the textbook (delta < theta)
 - No algorithmic modifications or heuristics
 
-**Practical differences:**
+ **Practical differences:**
 
-- **Error handling**: Added guards for tabular/model requirements (not in textbook pseudocode)
-- **Statistics tracking**: Returns convergence metrics (`deltas`, iteration counts) for analysis
-- **Deterministic policies**: All methods return deterministic policies (argmax), not stochastic
-- **Episode handling**: MC methods handle both `done` and `truncated` flags (Gymnasium API)
-- **Debug utilities**: Off-policy MC includes optional behavior policy monitoring
+ - **Error handling**: Added guards for tabular/model requirements (not in textbook pseudocode)
+ - **Statistics tracking**: Returns convergence metrics (`deltas`, iteration counts) for analysis
+ - **Deterministic policies**: All methods return deterministic policies (argmax), not stochastic
+ - **Episode handling**: MC methods handle both `done` and `truncated` flags (Gymnasium API)
+ - **Debug utilities**: Off-policy MC includes optional behavior policy monitoring
+
+
+## Stable-Baselines3 Algorithms (PPO, A2C, DQN)
+
+The project also includes model-free deep RL baselines using Stable-Baselines3 (SB3): PPO, A2C, and DQN, adapted to our tabular environment via observation wrappers.
+
+- Training scripts:
+  - `examples/train_ppo.py`
+  - `examples/train_a2c.py`
+  - `examples/train_dqn.py`
+- Replay script:
+  - `examples/replay_sb3_policy.py`
+- Wrappers (`wrappers/sb3_wrappers.py`):
+  - `OneHotObservationWrapper`: converts tabular `Discrete(nS)` to `Box(nS,)` one-hot (default para treino)
+  - `DecodedObservationWrapper`: converte para vetores contínuos normalizados (x, y, battery, has_package)
+
+### Treinamento (scripts train_*.py)
+
+- Ambiente padrão (atual): `max_battery=30`, `wind_slip=0.05`
+- Duração de treino:
+  - PPO: `total_timesteps ≈ 3_000_000`
+  - A2C: `total_timesteps ≈ 2_000_000`
+  - DQN: `total_timesteps ≈ 1_000_000`
+- Boas práticas implementadas:
+  - `device='cpu'` explícito para evitar avisos de GPU
+  - `EvalCallback` com ambiente de avaliação envolto em `Monitor` salvando `models/<algo>_best/best_model.zip`
+  - `tensorboard_log` habilitado; inclua `tensorboard` nas dependências
+  - Seeds fixos para reprodutibilidade
+  - `OneHotObservationWrapper` como padrão (estado discreto tabular)
+
+TensorBoard:
+
+- Instalação: `pip install tensorboard`
+- Execução (WSL/venv): `python -m tensorboard.main --logdir ./tensorboard` ou usar o binário do venv
+
+### Replay (`examples/replay_sb3_policy.py`)
+
+- Carrega automaticamente o melhor modelo se existir: `models/<algo>_best/best_model.zip`
+- Parâmetros de ambiente configuráveis: `--width`, `--height`, `--max-battery`, `--charge-rate`, `--wind-slip`, `--obstacles`, `--charging-stations`
+- Modos de observação: `--one-hot` (padrão) ou `--decoded`
+- Execução headless e logging:
+  - `--no-render` desabilita GUI
+  - `--to-csv sb3_experiments.csv` registra métricas por episódio (return, steps, delivered)
+- Ajuste automático de shape (one-hot):
+  - Se o modelo esperar dimensão one-hot diferente (p.ex. treinado com outro `max_battery`), o script recalcula e reconstrói o ambiente com `max_battery` compatível, preservando obstáculos e estações
+
+### Problemas comuns e soluções
+
+- `ModuleNotFoundError` (imports do projeto):
+  - Scripts adicionam a raiz do projeto ao `sys.path`
+- `UserWarning: You are using an evaluation environment without a Monitor wrapper`:
+  - Avaliação envolve `Monitor` para registrar métricas corretamente
+- Avisos de GPU/CUDA:
+  - Forçar `device='cpu'` nos `load()`/construtores dos modelos
+- `ImportError: No module named 'tensorboard'`:
+  - Adicionada dependência `tensorboard` e instruções de execução
+- `ValueError: Unexpected observation shape` no replay:
+  - O `replay_sb3_policy.py` ajusta automaticamente `max_battery` no modo one-hot para casar com o modelo
 
 
 ## References

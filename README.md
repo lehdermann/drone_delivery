@@ -47,6 +47,8 @@ Default settings keep the state space small and suitable for tabular methods.
   - Off-policy Monte Carlo Control using Importance Sampling
 - SARSA(λ) (model-free):
   - SARSA(λ) with linear function approximation
+- Stable-Baselines3 (model-free, deep RL):
+  - PPO, A2C, DQN (via Stable-Baselines3 with observation wrappers)
 
 ## Project Structure
 - `envs/drone_delivery.py` — Gymnasium environment with `enumerate_transitions(s, a)` for DP.
@@ -56,9 +58,15 @@ Default settings keep the state space small and suitable for tabular methods.
 - `examples/replay_vi_policy.py` — Visualize and evaluate Value Iteration policies.
 - `examples/replay_mc_policy.py` — Visualize and evaluate Monte Carlo policies.
 - `examples/replay_sarsa_policy.py` — Train/evaluate/replay SARSA(λ) policies.
+- `examples/replay_sb3_policy.py` — Replay SB3 (PPO/A2C/DQN) policies with visualization and optional CSV logging.
+- `examples/train_ppo.py` — Train PPO with SB3 (EvalCallback, Monitor, TensorBoard).
+- `examples/train_a2c.py` — Train A2C with SB3 (EvalCallback, Monitor, TensorBoard).
+- `examples/train_dqn.py` — Train DQN with SB3 (EvalCallback, Monitor, TensorBoard).
+- `wrappers/sb3_wrappers.py` — Observation wrappers for SB3 (one-hot, decoded).
+- `create_plot.py` — Consolidated plotting of VI/MC/SARSA and SB3 CSVs.
 - `docs/examples_guide.md` — Comprehensive guide for using the example scripts.
 - `docs/ALGORITHMS.md` — Detailed algorithm documentation and implementation notes.
-- `run_experiments.sh` — Automated experiment suite for VI, MC, and SARSA.
+- `run_experiments.sh` — Automated experiment suite for VI, MC, SARSA, and SB3 replays.
 - `requirements.txt` — Lightweight dependencies for the tabular project.
 
 ## Setup
@@ -68,7 +76,7 @@ Install dependencies (optionally in a virtual environment):
 pip install -r requirements.txt
 ```
 
-Note: The repository may already have `gymnasium` and `numpy` installed via the top-level `requirements.txt`. The `requirements.txt` adds optional packages used here (e.g., matplotlib, pandas, tqdm).
+Note: The repository may already have `gymnasium` and `numpy` installed via the top-level `requirements.txt`. The `requirements.txt` adds optional packages used here (e.g., matplotlib, pandas, tqdm, tensorboard). SB3 training scripts use Stable-Baselines3 and can log to TensorBoard.
 
 ## Quick Start
 
@@ -91,6 +99,37 @@ python examples/replay_mc_policy.py \
   --sleep 0.5
 ```
 
+### Train SB3 Policies
+
+```bash
+# PPO (~3M steps)
+python examples/train_ppo.py
+
+# A2C (~2M steps)
+python examples/train_a2c.py
+
+# DQN (~1M steps)
+python examples/train_dqn.py
+```
+
+TensorBoard (opcional):
+
+```bash
+python -m tensorboard.main --logdir ./tensorboard
+```
+
+### Replay SB3 Policy
+
+```bash
+python examples/replay_sb3_policy.py \
+  --algo ppo \
+  --episodes 5 \
+  --deterministic \
+  --max-battery 30 \
+  --wind-slip 0.05 \
+  --obstacles default --charging-stations default
+```
+
 ### Run Automated Experiments
 
 ```bash
@@ -98,6 +137,14 @@ python examples/replay_mc_policy.py \
 ```
 
 Results are saved to `vi_experiments.csv`, `mc_experiments.csv`, and `sarsa_experiments.csv`.
+SB3 replay results are saved to `sb3_experiments.csv` when using `--to-csv`.
+
+### Plot consolidated results
+
+```bash
+python create_plot.py
+```
+Outputs `performance_plot.png` comparing VI, MC, SARSA, and SB3.
 
 ### Visualize SARSA(λ) Policy (examples)
 
