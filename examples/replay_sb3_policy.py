@@ -2,7 +2,7 @@ import os
 import sys
 import argparse
 import time
-from typing import Optional
+from typing import Optional, Dict, Any
 
 from stable_baselines3 import PPO, A2C, DQN
 
@@ -103,6 +103,114 @@ def parse_args() -> argparse.Namespace:
         one_hot = True
     args.one_hot = one_hot
     return args
+
+
+def replay_policy(
+    algo: str,
+    model_path: str,
+    env_config: Dict[str, Any],
+    episodes: int = 1,
+    seed: int = 42,
+    deterministic: bool = True,
+    sleep: float = 0.1,
+    render_ax=None,
+):
+    """
+    Replays a trained SB3 policy in the DroneDeliveryEnv.
+
+    :param algo: The algorithm class ('ppo', 'a2c', 'dqn').
+    :param model_path: Path to the saved model .zip file.
+    :param env_config: Dictionary with environment configuration.
+    :param episodes: Number of episodes to replay.
+    :param seed: Seed for the environment.
+    :param deterministic: Whether to use deterministic actions.
+    :param sleep: Time to sleep between steps.
+    :param render_ax: Matplotlib Axes object for rendering. If None, no rendering.
+    """
+    if not os.path.exists(model_path):
+        raise FileNotFoundError(f"Model not found: {model_path}. Train and save a model first.")
+
+    ModelCls = ALGOS[algo]
+    model = ModelCls.load(model_path, device="cpu")
+
+    # --- Environment Setup ---
+    obstacles = None
+    if env_config.get("obstacles") == "default":
+        obstacles = [
+            (3, 1), (3, 2), (3, 3),
+            (1, 4), (2, 4),
+            (5, 3), (5, 4),
+        ]
+
+    charging_stations = None
+    if env_config.get("charging_stations") == "default":
+        charging_stations = [(0, 0), (3, 6), (6, 3)]
+
+    env = make_env(
+        width=env_config.get("width", 7),
+        height=env_config.get("height", 7),
+        max_battery=env_config.get("max_battery", 30),
+        wind_slip=env_config.get("wind_slip", 0.05),
+        one_hot=True,  # SB3 models are trained with one-hot
+        obstacles=obstacles,
+        charging_stations=charging_stations,
+        charge_rate=env_config.get("charge_rate", 2),
+    )
+
+    # --- Replay Loop ---
+    for ep in range(episodes):
+        obs, info = env.reset(seed=seed + ep)
+        done, truncated = False, False
+        ep_return, steps = 0.0, 0
+
+        fig = None
+        # If rendering to an axis, get the figure for display updates
+        if render_ax:
+            fig = render_ax.figure
+
+        while not (done or truncated):
+            if render_ax:
+                env.render(ax=render_ax)
+                # In a notebook, we need to clear output and redisplay the figure
+                # to show the animation.
+                if fig:
+                    # Necessary for updating the plot in a loop
+                    from IPython import display
+                    display.clear_output(wait=True)
+                    display.display(fig)
+
+            action, _ = model.predict(obs, deterministic=deterministic)
+            obs, reward, done, truncated, info = env.step(int(action))
+            ep_return += float(reward)
+            steps += 1
+
+            if sleep > 0 and render_ax:
+                time.sleep(sleep)
+
+        if render_ax:
+            # Final render to show terminal state
+            if fig:
+                from IPython import display
+                display.clear_output(wait=True)
+                env.render(ax=render_ax)
+                display.display(fig)
+            else:
+                env.render(ax=render_ax)
+            print(f"Episode {ep+1} finished.")
+            print(f"  Total Steps: {steps}")
+            print(f"  Total Return: {ep_return:.2f}")
+            print(f"  Delivered: {'Yes' if info.get('delivered') else 'No'}")
+
+    # Clean up the environment
+    try:
+        env.close()
+        if render_ax:
+            from IPython import display
+            display.clear_output(wait=True)  # Clear the final frame
+    except Exception:
+        pass
+
+    return ep_return, steps, info
 
 
 def main():
@@ -265,4 +373,5 @@ def main():
 
 
 if __name__ == "__main__":
+    # This block is now only executed when running the script from the command line
     main()

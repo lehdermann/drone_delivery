@@ -3,4 +3,8 @@ gymnasium
 numpy
 matplotlib
 stable-baselines3
+stable-baselines3[extra]
 tensorboard
+jupyter
+tqdm
+tabulate

@@ -28,3 +28,6 @@ class OneHotObservationWrapper(gym.ObservationWrapper):
         v = np.zeros((n,), dtype=np.float32)
         v[int(obs)] = 1.0
         return v
+
+    def render(self, **kwargs):
+        return self.env.render(**kwargs)

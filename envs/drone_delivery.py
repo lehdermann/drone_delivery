@@ -45,14 +45,14 @@ class DroneDeliveryEnv(gym.Env):
         *,
         width: int = 7,
         height: int = 7,
-        max_battery: int = 5,
+        max_battery: int = 30,
         charge_rate: int = 2,
         obstacles: Sequence[Tuple[int, int]] | None = None,
         pickup: Tuple[int, int] = (0, 0),
         dropoff: Tuple[int, int] = (6, 6),
         charging_stations: Sequence[Tuple[int, int]] | None = None,
-        wind_slip: float = 0.1,
-        max_steps: int = 200,
+        wind_slip: float = 0.05,
+        max_steps: int = 30,
         render_mode: str | None = None,
         seed: int | None = None,
     ) -> None:
@@ -246,7 +246,7 @@ class DroneDeliveryEnv(gym.Env):
         return results
 
     # --------------- Rendering ---------------
-    def render(self):
+    def render(self, ax=None):
         grid = [["."] * self.width for _ in range(self.height)]
         for c in self.obstacles:
             grid[c.y][c.x] = "#"
@@ -264,14 +264,22 @@ class DroneDeliveryEnv(gym.Env):
             return s
         else:
             # human with matplotlib - enhanced visual representation
-            if self._fig is None or self._ax is None:
-                self._fig, self._ax = plt.subplots(figsize=(8, 8))
-                self._ax.set_xlim(-0.5, self.width - 0.5)
-                self._ax.set_ylim(-0.5, self.height - 0.5)
-                self._ax.set_aspect('equal')
-                self._ax.invert_yaxis()
-            self._ax.clear()
-            
+            if ax is None:
+                # If no axes is provided, create our own figure and axes
+                if self._fig is None or self._ax is None:
+                    self._fig, self._ax = plt.subplots(figsize=(8, 8))
+                ax = self._ax
+                self._fig = ax.figure
+            else:
+                # If an axes is provided, use it and get its figure
+                self._fig = ax.figure
+                self._ax = ax
+
+            ax.clear()
+            ax.set_xlim(-0.5, self.width - 0.5)
+            ax.set_ylim(-0.5, self.height - 0.5)
+            ax.set_aspect('equal')
+            ax.invert_yaxis()
             # Draw grid cells with enhanced colors
             for x in range(self.width):
                 for y in range(self.height):
@@ -302,7 +310,7 @@ class DroneDeliveryEnv(gym.Env):
                         edgecolor=edgecolor,
                         linewidth=linewidth
                     ))
-            
+
             # Draw icons/markers for special locations
             # Store/Pickup location - use 'S' marker with store icon
             self._ax.plot(self.pickup.x, self.pickup.y, marker='s', markersize=20, 
